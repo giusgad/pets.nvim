@@ -1,6 +1,11 @@
 # To do
+## Features
+- [ ] Ability to name pets
+    - [ ] Ability to spawn multiple pets
+- [ ] Ability to play/pause the animation
+- [ ] Ability to temporairly hide the pets
+
 ## Technical
-- Might need to create an hidden buffer and then display it in the popup
 
 ## Usability
 - [ ] Fix `:h` page formatting
@@ -10,3 +15,4 @@
 
 ## Limitations
 - The plugin doesn't work inside tmux!!
+- The plugin only works in terminals that support the kitty image protocol
