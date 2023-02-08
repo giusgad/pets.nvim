@@ -9,7 +9,6 @@ M.stack = {
 M.options = {
     pet_name = "cat",
     pet_style = "brown",
-    fps = 8,
     offset_rows = 0,
     offset_cols = 0,
 }
@@ -39,28 +38,7 @@ function M.show()
         readonly = true,
     }
 
-    local image = utils.ShowPet(
-        popup.bufnr,
-        M.options.offset_rows,
-        M.options.offset_cols,
-        M.options.pet_name,
-        M.options.pet_style,
-        M.options.fps
-    )
-    table.insert(M.stack.popups, popup) -- TODO: update for multiple images
-    table.insert(M.stack.images, image)
-end
-
--- close all the popups and stop displaying any image
-function M.closeAll() -- TODO: update for multiple images
-    for _, image in pairs(M.stack.images) do
-        image:delete(0, {
-            free = false,
-        })
-    end
-    for _, popup in pairs(M.stack.popups) do
-        popup:unmount()
-    end
+    utils.ShowPet(popup.bufnr, M.options.offset_rows, M.options.offset_cols, M.options.pet_name, M.options.pet_style)
 end
 
 return M

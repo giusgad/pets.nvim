@@ -2,7 +2,7 @@ local M = {}
 M.timer = nil
 M.bufnr = nil
 M.frame_counter = 1
-M.frames = {}
+M.frames = {} -- TODO: init frames to be images, not paths
 M.current_image = nil
 
 local lines = {}
@@ -14,12 +14,16 @@ for _ = 0, 15 do
     table.insert(lines, string)
 end
 
-function M.animate(buf, sourcedir, fps)
-    local files = M._listdir(sourcedir .. "8fps/" .. "walk/")
+function M.animate(buf, sourcedir)
+    local files = require("pets.utils").listdir(sourcedir .. "walk/")
     for _, file in pairs(files) do
-        table.insert(M.frames, sourcedir .. "8fps/" .. "walk/" .. file)
+        table.insert(M.frames, sourcedir .. "walk/" .. file)
     end
-    M.timer = vim.loop.new_timer()
+    if M.timer == nil then
+        M.timer = vim.loop.new_timer()
+    else
+        print("timer already exists")
+    end
     M.bufnr = buf
 
     M.timer:start(100, 1000 / 8, vim.schedule_wrap(M.next_frame))
@@ -40,22 +44,6 @@ function M.next_frame()
     image:display(1, M.frame_counter, M.bufnr, {})
     M.current_image = image
     return true
-end
-
-function M._listdir(directory)
-    local i, t, popen = 0, {}, io.popen
-    local pfile = popen('/bin/ls -a "' .. directory .. '"')
-    if pfile == nil then
-        error("Error getting assets for specified pet")
-    end
-    for filename in pfile:lines() do
-        if filename ~= "." and filename ~= ".." then
-            i = i + 1
-            t[i] = filename
-        end
-    end
-    pfile:close()
-    return t
 end
 
 return M
