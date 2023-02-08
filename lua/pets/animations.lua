@@ -1,9 +1,6 @@
 local M = {}
-M.timer = nil
-M.bufnr = nil
-M.frame_counter = 1
-M.frames = {} -- TODO: init frames to be images, not paths
-M.current_image = nil
+M.Animation = {}
+M.Animation.__index = M.Animation
 
 local lines = {}
 local string = ""
@@ -14,36 +11,48 @@ for _ = 0, 15 do
     table.insert(lines, string)
 end
 
-function M.animate(buf, sourcedir)
-    local files = require("pets.utils").listdir(sourcedir .. "walk/")
-    for _, file in pairs(files) do
-        table.insert(M.frames, sourcedir .. "walk/" .. file)
-    end
-    if M.timer == nil then
-        M.timer = vim.loop.new_timer()
-    else
-        print("timer already exists")
-    end
-    M.bufnr = buf
-
-    M.timer:start(100, 1000 / 8, vim.schedule_wrap(M.next_frame))
+function M.Animation.new(sourcedir, type, style)
+    local instance = setmetatable({}, M.Animation)
+    instance.type = type
+    instance.style = style
+    instance.sourcedir = sourcedir
+    instance.frame_counter = 1
+    instance.frames = {}
+    return instance
 end
 
-function M.next_frame()
-    M.frame_counter = M.frame_counter + 1
-    vim.api.nvim_buf_set_lines(M.bufnr, 0, -1, false, lines)
-    if not M.current_image then
-        M.frame_counter = 1
+function M.Animation:start(bufnr)
+    local files = require("pets.utils").listdir(self.sourcedir .. "walk/")
+    for _, file in pairs(files) do
+        table.insert(self.frames, self.sourcedir .. "walk/" .. file)
+    end
+    if self.timer ~= nil then
+        self.timer = nil
+    end
+    self.timer = vim.loop.new_timer()
+    self.bufnr = bufnr
+
+    self.timer:start(100, 1000 / 8, function()
+        vim.schedule(function()
+            M.Animation.next_frame(self)
+        end)
+    end) -- TODO: try timeout = 0
+end
+
+function M.Animation:next_frame()
+    self.frame_counter = self.frame_counter + 1
+    vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, lines)
+    if not self.current_image then
+        self.frame_counter = 1
     else
-        M.current_image:delete(0, { free = false })
+        self.current_image:delete(0, { free = false })
     end
-    if M.frame_counter > #M.frames then
-        M.frame_counter = 1
+    if self.frame_counter > #self.frames then
+        self.frame_counter = 1
     end
-    local image = require("hologram.image"):new(M.frames[M.frame_counter])
-    image:display(1, M.frame_counter, M.bufnr, {})
-    M.current_image = image
-    return true
+    local image = require("hologram.image"):new(self.frames[self.frame_counter])
+    image:display(1, self.frame_counter, self.bufnr, {})
+    self.current_image = image
 end
 
 return M
