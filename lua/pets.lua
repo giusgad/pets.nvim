@@ -1,17 +1,13 @@
 local M = {}
 
-M.stack = {
-    popups = {},
-    images = {},
-    jobs = {},
-}
-
 M.options = {
     pet_name = "cat",
     pet_style = "brown",
     offset_rows = 0,
     offset_cols = 0,
 }
+
+M.pets = {}
 
 function M.setup(options)
     options = options or {}
@@ -33,12 +29,15 @@ function M.show()
     local utils = require("pets.utils")
     popup:mount()
 
-    popup.buf_options = { -- then set the buffer to be readonly
-        modifiable = false,
-        readonly = true,
-    }
-
     utils.ShowPet(popup.bufnr, M.options.offset_rows, M.options.offset_cols, M.options.pet_name, M.options.pet_style)
+end
+
+function M.create_pet(name, type, style)
+    local pet = require("pets.pet").Pet.new(name, type, style)
+    local popup = require("pets.popup").popup
+    popup:mount()
+    pet:animate(popup.bufnr)
+    table.insert(M.pets, pet)
 end
 
 return M
