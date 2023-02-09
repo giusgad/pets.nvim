@@ -1,5 +1,7 @@
 local M = {}
 
+-- list all files in a directory
+-- source: https://stackoverflow.com/a/11130774
 function M.listdir(directory)
     local i, t, popen = 0, {}, io.popen
     local pfile = popen('/bin/ls -a "' .. directory .. '"')

@@ -2,6 +2,7 @@ local M = {}
 M.Animation = {}
 M.Animation.__index = M.Animation
 
+-- lines to insert in the buffer to avoid image stretching
 local lines = {}
 local string = ""
 for _ = 0, 150 do

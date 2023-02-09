@@ -2,6 +2,10 @@ local M = {}
 M.Pet = {}
 M.Pet.__index = M.Pet
 
+-- @param name the actual name for the pet
+-- @param type the species of the pet e.g. cat
+-- @param style the color/style of the pet e.g. brown
+-- @return a new Pet instance
 function M.Pet.new(name, type, style)
     local instance = setmetatable({}, M.Pet)
     instance.name = name

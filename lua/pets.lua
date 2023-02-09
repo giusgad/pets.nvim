@@ -22,6 +22,7 @@ function M.setup(options)
     require("pets.commands") -- init autocommands
 end
 
+-- create a Pet object and add it to the pets table
 function M.create_pet(name, type, style)
     local pet = require("pets.pet").Pet.new(name, type, style)
     local popup = require("pets.popup").popup
