@@ -24,7 +24,7 @@ end
 function M.create_pet(name, type, style) -- TODO: don't allow duplicate names
     local pet = require("pets.pet").Pet.new(name, type, style, M.options.row, M.options.col)
     pet:animate()
-    table.insert(M.pets, pet)
+    M.pets[pet.name] = pet
 end
 
 -- function M.kill_pet(name) end
@@ -33,6 +33,7 @@ function M.kill_all()
     for _, pet in pairs(M.pets) do
         pet:kill()
     end
+    M.pets = {}
 end
 
 function M.list()
