@@ -1,10 +1,8 @@
 local M = {}
 
 M.options = {
-    pet_type = "cat",
-    pet_style = "brown",
-    offset_rows = 0,
-    offset_cols = 0,
+    row = 1,
+    col = 0,
 }
 
 M.pets = {}
@@ -24,7 +22,7 @@ end
 
 -- create a Pet object and add it to the pets table
 function M.create_pet(name, type, style) -- TODO: don't allow duplicate names
-    local pet = require("pets.pet").Pet.new(name, type, style)
+    local pet = require("pets.pet").Pet.new(name, type, style, M.options.row, M.options.col)
     pet:animate()
     table.insert(M.pets, pet)
 end

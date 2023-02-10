@@ -1,4 +1,5 @@
 local M = {}
+
 M.Pet = {}
 M.Pet.__index = M.Pet
 
@@ -21,7 +22,7 @@ local popup_opts = {
 -- @param type the species of the pet e.g. cat
 -- @param style the color/style of the pet e.g. brown
 -- @return a new Pet instance
-function M.Pet.new(name, type, style)
+function M.Pet.new(name, type, style, row, col)
     local instance = setmetatable({}, M.Pet)
     instance.name = name
     instance.type = type
@@ -30,8 +31,7 @@ function M.Pet.new(name, type, style)
     local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
     instance.sourcedir = wd .. type .. "/" .. style .. "/"
 
-    instance.animation = require("pets.animations").Animation.new(instance.sourcedir, type, style)
-    instance.popup = require("pets.popup").popup
+    instance.animation = require("pets.animations").Animation.new(instance.sourcedir, type, style, row, col)
     instance.popup = require("nui.popup")(popup_opts)
     return instance
 end

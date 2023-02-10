@@ -14,7 +14,7 @@ end
 
 local listdir = require("pets.utils").listdir
 
-function M.Animation.new(sourcedir, type, style)
+function M.Animation.new(sourcedir, type, style, row, col)
     local instance = setmetatable({}, M.Animation)
     instance.type = type
     instance.style = style
@@ -22,6 +22,7 @@ function M.Animation.new(sourcedir, type, style)
     instance.frame_counter = 1
     instance.actions = listdir(sourcedir)
     instance.frames = {}
+    instance.row, instance.col = row, col
     for _, action in pairs(instance.actions) do
         local current_actions = {}
         for _, file in pairs(listdir(sourcedir .. action)) do
@@ -62,7 +63,7 @@ function M.Animation:next_frame()
         self.frame_counter = 1
     end
     local image = self.frames[self.current_action][self.frame_counter]
-    image:display(1, self.frame_counter, self.bufnr, {})
+    image:display(self.row, self.col, self.bufnr, {})
     self.current_image = image
 end
 
