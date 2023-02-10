@@ -56,4 +56,13 @@ function M.Animation:next_frame()
     self.current_image = image
 end
 
+function M.Animation:stop()
+    if self.current_image then
+        self.current_image:delete(0, { free = false })
+    end
+    if self.timer then
+        self.timer:stop()
+    end
+end
+
 return M

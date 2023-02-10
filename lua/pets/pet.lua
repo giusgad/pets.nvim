@@ -11,7 +11,7 @@ function M.Pet.new(name, type, style)
     instance.name = name
     instance.type = type
     instance.style = style
-    local wd = "/mnt/shared/coding/lua/plugins/pets.nvim/media/" -- TODO: adapt to use the correct path when plugin is installed
+    local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
     instance.sourcedir = wd .. type .. "/" .. style .. "/"
     instance.animation = require("pets.animations").Animation.new(instance.sourcedir, type, style)
     return instance
@@ -19,6 +19,10 @@ end
 
 function M.Pet:animate(bufnr)
     self.animation:start(bufnr)
+end
+
+function M.Pet:kill()
+    self.animation:stop()
 end
 
 return M
