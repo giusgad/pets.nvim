@@ -2,6 +2,21 @@ local M = {}
 M.Pet = {}
 M.Pet.__index = M.Pet
 
+local popup_opts = {
+    position = {
+        row = "100%",
+        col = "100%",
+    },
+    size = {
+        width = "25%",
+        height = 10,
+    },
+    focusable = false,
+    enter = false,
+    win_options = {
+        winblend = 100,
+    },
+}
 -- @param name the actual name for the pet
 -- @param type the species of the pet e.g. cat
 -- @param style the color/style of the pet e.g. brown
@@ -17,6 +32,7 @@ function M.Pet.new(name, type, style)
 
     instance.animation = require("pets.animations").Animation.new(instance.sourcedir, type, style)
     instance.popup = require("pets.popup").popup
+    instance.popup = require("nui.popup")(popup_opts)
     return instance
 end
 
