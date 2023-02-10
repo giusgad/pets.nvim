@@ -23,7 +23,7 @@ function M.setup(options)
 end
 
 -- create a Pet object and add it to the pets table
-function M.create_pet(name, type, style)
+function M.create_pet(name, type, style) -- TODO: don't allow duplicate names
     local pet = require("pets.pet").Pet.new(name, type, style)
     pet:animate()
     table.insert(M.pets, pet)
@@ -34,6 +34,12 @@ end
 function M.kill_all()
     for _, pet in pairs(M.pets) do
         pet:kill()
+    end
+end
+
+function M.list()
+    for _, pet in pairs(M.pets) do
+        print(pet.name)
     end
 end
 
