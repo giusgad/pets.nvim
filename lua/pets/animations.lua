@@ -50,7 +50,9 @@ end
 
 function M.Animation:next_frame()
     self.frame_counter = self.frame_counter + 1
-    vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, lines)
+    if vim.api.nvim_buf_is_valid(self.bufnr) then
+        vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, lines)
+    end
     if not self.current_image then
         self.frame_counter = 1
     else
