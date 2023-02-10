@@ -27,7 +27,14 @@ function M.create_pet(name, type, style) -- TODO: don't allow duplicate names
     M.pets[pet.name] = pet
 end
 
--- function M.kill_pet(name) end
+function M.kill_pet(name)
+    if M.pets[name] ~= nil then
+        M.pets[name]:kill()
+        M.pets[name] = nil
+    else
+        print("Pet name incorrect")
+    end
+end
 
 function M.kill_all()
     for _, pet in pairs(M.pets) do
