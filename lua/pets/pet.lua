@@ -11,17 +11,22 @@ function M.Pet.new(name, type, style)
     instance.name = name
     instance.type = type
     instance.style = style
+
     local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
     instance.sourcedir = wd .. type .. "/" .. style .. "/"
+
     instance.animation = require("pets.animations").Animation.new(instance.sourcedir, type, style)
+    instance.popup = require("pets.popup").popup
     return instance
 end
 
-function M.Pet:animate(bufnr)
-    self.animation:start(bufnr)
+function M.Pet:animate()
+    self.popup:mount()
+    self.animation:start(self.popup.bufnr)
 end
 
 function M.Pet:kill()
+    self.popup:unmount()
     self.animation:stop()
 end
 
