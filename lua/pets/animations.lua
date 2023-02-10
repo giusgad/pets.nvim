@@ -12,32 +12,40 @@ for _ = 0, 15 do
     table.insert(lines, string)
 end
 
+local listdir = require("pets.utils").listdir
+
 function M.Animation.new(sourcedir, type, style)
     local instance = setmetatable({}, M.Animation)
     instance.type = type
     instance.style = style
     instance.sourcedir = sourcedir
     instance.frame_counter = 1
+    instance.actions = listdir(sourcedir)
     instance.frames = {}
+    for _, action in pairs(instance.actions) do
+        local current_actions = {}
+        for _, file in pairs(listdir(sourcedir .. action)) do
+            local image = require("hologram.image"):new(sourcedir .. action .. "/" .. file)
+            table.insert(current_actions, image)
+        end
+        instance.frames[action] = current_actions
+    end
     return instance
 end
 
 function M.Animation:start(bufnr)
-    local files = require("pets.utils").listdir(self.sourcedir .. "walk/")
-    for _, file in pairs(files) do
-        table.insert(self.frames, self.sourcedir .. "walk/" .. file)
-    end
-    if self.timer ~= nil then
+    if self.timer ~= nil then -- reset timer
         self.timer = nil
     end
     self.timer = vim.loop.new_timer()
     self.bufnr = bufnr
+    self.current_action = "idle"
 
-    self.timer:start(100, 1000 / 8, function()
+    self.timer:start(0, 1000 / 8, function() -- run timer at 8fps
         vim.schedule(function()
             M.Animation.next_frame(self)
         end)
-    end) -- TODO: try timeout = 0
+    end)
 end
 
 function M.Animation:next_frame()
@@ -48,10 +56,10 @@ function M.Animation:next_frame()
     else
         self.current_image:delete(0, { free = false })
     end
-    if self.frame_counter > #self.frames then
+    if self.frame_counter > #self.frames[self.current_action] then
         self.frame_counter = 1
     end
-    local image = require("hologram.image"):new(self.frames[self.frame_counter])
+    local image = self.frames[self.current_action][self.frame_counter]
     image:display(1, self.frame_counter, self.bufnr, {})
     self.current_image = image
 end
