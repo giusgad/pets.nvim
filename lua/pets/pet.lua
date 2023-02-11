@@ -31,8 +31,15 @@ function M.Pet.new(name, type, style, row, col)
     local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
     instance.sourcedir = wd .. type .. "/" .. style .. "/"
 
-    instance.animation = require("pets.animations").Animation.new(instance.sourcedir, type, style, row, col)
     instance.popup = require("nui.popup")(popup_opts)
+    instance.animation = require("pets.animations").Animation.new(
+        instance.sourcedir,
+        type,
+        style,
+        row,
+        col,
+        instance.popup.win_config.width
+    )
     return instance
 end
 

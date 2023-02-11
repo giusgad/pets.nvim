@@ -14,7 +14,7 @@ end
 
 local listdir = require("pets.utils").listdir
 
-function M.Animation.new(sourcedir, type, style, row, col)
+function M.Animation.new(sourcedir, type, style, row, col, popup_width)
     local instance = setmetatable({}, M.Animation)
     instance.type = type
     instance.style = style
@@ -22,6 +22,7 @@ function M.Animation.new(sourcedir, type, style, row, col)
     instance.frame_counter = 1
     instance.actions = listdir(sourcedir)
     instance.frames = {}
+    instance.popup_width = popup_width
     instance.row, instance.col = row, col
     for _, action in pairs(instance.actions) do
         local current_actions = {}
@@ -63,8 +64,27 @@ function M.Animation:next_frame()
         self.frame_counter = 1
     end
     local image = self.frames[self.current_action][self.frame_counter]
+    M.Animation.set_next_col(self)
     image:display(self.row, self.col, self.bufnr, {})
     self.current_image = image
+end
+
+function M.Animation:set_next_col()
+    if self.current_action == "walk" then
+        if self.col < self.popup_width - 5 then
+            self.col = self.col + 1
+        else
+            self.col = 0
+        end
+    elseif self.current_action == "sneak" then
+        if self.col < self.popup_width - 8 then
+            if self.frame_counter % 2 == 0 then
+                self.col = self.col + 1
+            end
+        else
+            self.col = 0
+        end
+    end
 end
 
 function M.Animation:stop()
