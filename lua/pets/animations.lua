@@ -61,12 +61,28 @@ function M.Animation:next_frame()
         self.current_image:delete(0, { free = false })
     end
     if self.frame_counter > #self.frames[self.current_action] then
+        M.Animation.set_next_action(self)
         self.frame_counter = 1
     end
     local image = self.frames[self.current_action][self.frame_counter]
     M.Animation.set_next_col(self)
     image:display(self.row, self.col, self.bufnr, {})
     self.current_image = image
+end
+
+function M.Animation:set_next_action()
+    local next_actions = {
+        crouch = { "liedown", "sneak", "sit" },
+        idle = { "idle_blink", "walk", "sit" },
+        idle_blink = { "idle", "walk", "sit" },
+        liedown = { "sneak", "crouch" },
+        sit = { "idle", "idle_blink", "crouch", "liedown" },
+        sneak = { "crouch", "walk", "liedown" },
+        walk = { "idle", "idle_blink" },
+    }
+    if math.random() < 0.5 then
+        self.current_action = next_actions[self.current_action][math.random(#next_actions[self.current_action])]
+    end
 end
 
 function M.Animation:set_next_col()
