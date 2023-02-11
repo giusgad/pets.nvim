@@ -18,9 +18,11 @@ local popup_opts = {
         winblend = 100,
     },
 }
+
 -- @param name the actual name for the pet
 -- @param type the species of the pet e.g. cat
 -- @param style the color/style of the pet e.g. brown
+-- @param user_opts the table with user options (to be passed to Animation)
 -- @return a new Pet instance
 function M.Pet.new(name, type, style, user_opts)
     local instance = setmetatable({}, M.Pet)
@@ -42,11 +44,13 @@ function M.Pet.new(name, type, style, user_opts)
     return instance
 end
 
+-- start the animation of the pet
 function M.Pet:animate()
     self.popup:mount()
     self.animation:start(self.popup.bufnr)
 end
 
+-- delete the pet :(
 function M.Pet:kill()
     self.popup:unmount()
     self.animation:stop()

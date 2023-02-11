@@ -14,6 +14,11 @@ end
 
 local listdir = require("pets.utils").listdir
 
+-- @param sourcedir the full path for the media directory
+-- @param type,style type and style of the pet
+-- @param popup_width width of the popup in columns
+-- @param user_opts table with user options
+-- @return a new animation instance
 function M.Animation.new(sourcedir, type, style, popup_width, user_opts)
     local instance = setmetatable({}, M.Animation)
     instance.type = type
@@ -45,6 +50,8 @@ function M.Animation.new(sourcedir, type, style, popup_width, user_opts)
     return instance
 end
 
+-- @param bufnr buffer number of the popup
+-- @function start the animation
 function M.Animation:start(bufnr)
     if self.timer ~= nil then -- reset timer
         self.timer = nil
@@ -53,15 +60,18 @@ function M.Animation:start(bufnr)
     self.bufnr = bufnr
     self.current_action = "idle"
 
-    self.timer:start(0, 1000 / (self.speed_multiplier * 8), function() -- run timer at 8fps
+    self.timer:start(0, 1000 / (self.speed_multiplier * 8), function()
         vim.schedule(function()
             M.Animation.next_frame(self)
         end)
     end)
 end
 
+-- @function called on every tick from the timer, go to the next frame
 function M.Animation:next_frame()
     self.frame_counter = self.frame_counter + 1
+
+    -- pouplate the buffer with spaces to avoid image distortion
     if vim.api.nvim_buf_is_valid(self.bufnr) then
         vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, lines)
     end
@@ -70,16 +80,18 @@ function M.Animation:next_frame()
     else
         self.current_image:delete(0, { free = false })
     end
-    if self.frame_counter > #self.frames[self.current_action] then
+    if self.frame_counter > #self.frames[self.current_action] then -- true every 8 frames
         M.Animation.set_next_action(self)
         self.frame_counter = 1
     end
+    -- frames contains the images for every action
     local image = self.frames[self.current_action][self.frame_counter]
     M.Animation.set_next_col(self)
     image:display(self.row, self.col, self.bufnr, {})
     self.current_image = image
 end
 
+-- @function decide which action comes after the following
 function M.Animation:set_next_action()
     local next_actions = {
         crouch = { "liedown", "sneak", "sit" },
@@ -95,6 +107,7 @@ function M.Animation:set_next_action()
     end
 end
 
+-- @function set horizontal movement per frame based on current action
 function M.Animation:set_next_col()
     if self.current_action == "walk" then
         if self.col < self.popup_width - 8 then
