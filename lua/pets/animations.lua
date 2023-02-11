@@ -14,7 +14,7 @@ end
 
 local listdir = require("pets.utils").listdir
 
-function M.Animation.new(sourcedir, type, style, row, col, popup_width)
+function M.Animation.new(sourcedir, type, style, popup_width, user_opts)
     local instance = setmetatable({}, M.Animation)
     instance.type = type
     instance.style = style
@@ -23,7 +23,17 @@ function M.Animation.new(sourcedir, type, style, row, col, popup_width)
     instance.actions = listdir(sourcedir)
     instance.frames = {}
     instance.popup_width = popup_width
-    instance.row, instance.col = row, col
+
+    -- user options
+    instance.row, instance.col = user_opts.row, user_opts.col
+    instance.speed_multiplier = user_opts.speed_multiplier
+    if user_opts.col > popup_width - 8 then
+        M.base_col = popup_width - 8
+    else
+        M.base_col = user_opts.col
+    end
+
+    -- setup frames
     for _, action in pairs(instance.actions) do
         local current_actions = {}
         for _, file in pairs(listdir(sourcedir .. action)) do
@@ -43,7 +53,7 @@ function M.Animation:start(bufnr)
     self.bufnr = bufnr
     self.current_action = "idle"
 
-    self.timer:start(0, 1000 / 8, function() -- run timer at 8fps
+    self.timer:start(0, 1000 / (self.speed_multiplier * 8), function() -- run timer at 8fps
         vim.schedule(function()
             M.Animation.next_frame(self)
         end)
@@ -87,18 +97,18 @@ end
 
 function M.Animation:set_next_col()
     if self.current_action == "walk" then
-        if self.col < self.popup_width - 5 then
+        if self.col < self.popup_width - 8 then
             self.col = self.col + 1
         else
-            self.col = 0
+            self.col = M.base_col
         end
-    elseif self.current_action == "sneak" then
+    elseif self.current_action == "sneak" or self.current_action == "crouch" then
         if self.col < self.popup_width - 8 then
             if self.frame_counter % 2 == 0 then
                 self.col = self.col + 1
             end
         else
-            self.col = 0
+            self.col = M.base_col
         end
     end
 end

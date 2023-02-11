@@ -1,8 +1,9 @@
 local M = {}
 
 M.options = {
-    row = 1,
-    col = 0,
+    row = 5, -- the row (height) to display the pet at
+    col = 0, -- the column to display the pet at (set to high numeber to have it stay stil at the right)
+    speed_multiplier = 1,
 }
 
 M.pets = {}
@@ -26,7 +27,7 @@ function M.create_pet(name, type, style)
         vim.api.nvim_err_writeln("Name already in use")
         return
     end
-    local pet = require("pets.pet").Pet.new(name, type, style, M.options.row, M.options.col)
+    local pet = require("pets.pet").Pet.new(name, type, style, M.options)
     pet:animate()
     M.pets[pet.name] = pet
 end

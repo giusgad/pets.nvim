@@ -9,7 +9,7 @@ local popup_opts = {
         col = "100%",
     },
     size = {
-        width = "25%",
+        width = "30%",
         height = 10,
     },
     focusable = false,
@@ -22,7 +22,7 @@ local popup_opts = {
 -- @param type the species of the pet e.g. cat
 -- @param style the color/style of the pet e.g. brown
 -- @return a new Pet instance
-function M.Pet.new(name, type, style, row, col)
+function M.Pet.new(name, type, style, user_opts)
     local instance = setmetatable({}, M.Pet)
     instance.name = name
     instance.type = type
@@ -36,9 +36,8 @@ function M.Pet.new(name, type, style, row, col)
         instance.sourcedir,
         type,
         style,
-        row,
-        col,
-        instance.popup.win_config.width
+        instance.popup.win_config.width,
+        user_opts
     )
     return instance
 end
