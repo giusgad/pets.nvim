@@ -26,7 +26,7 @@ end
 -- create a Pet object and add it to the pets table
 function M.create_pet(name, type, style)
     if M.pets[name] ~= nil then
-        vim.api.nvim_err_writeln("Name already in use")
+        vim.notify("Name already in use", vim.log.levels.WARN)
         return
     end
     local pet = require("pets.pet").Pet.new(name, type, style, M.options)
@@ -39,7 +39,7 @@ function M.kill_pet(name)
         M.pets[name]:kill()
         M.pets[name] = nil
     else
-        vim.api.nvim_err_writeln("Pet name not found")
+        vim.notify("Pet name not found", vim.log.levels.WARN)
     end
 end
 
