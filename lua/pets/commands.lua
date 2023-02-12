@@ -1,7 +1,7 @@
 local pets = require("pets")
 
 vim.api.nvim_create_user_command("PetsNew", function(input)
-    pets.create_pet(input.args, "cat", "light_grey")
+    pets.create_pet(input.args, pets.options.default_pet, pets.options.default_style)
 end, { nargs = 1 })
 
 vim.api.nvim_create_user_command("PetsKillAll", function()

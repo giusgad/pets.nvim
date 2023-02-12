@@ -4,6 +4,8 @@ M.options = {
     row = 5, -- the row (height) to display the pet at
     col = 0, -- the column to display the pet at (set to high numeber to have it stay stil at the right)
     speed_multiplier = 1,
+    default_pet = "cat",
+    default_style = "brown",
 }
 
 M.pets = {}
