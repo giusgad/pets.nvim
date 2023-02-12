@@ -2,9 +2,15 @@ local M = {}
 
 -- list all files in a directory
 -- source: https://stackoverflow.com/a/11130774
-function M.listdir(directory)
+function M.listdir(directory, suppress)
+    suppress = suppress or false
     local i, t, popen = 0, {}, io.popen
-    local pfile = popen('/bin/ls -a "' .. directory .. '"')
+    local pfile
+    if suppress then
+        pfile = popen('/bin/ls -a "' .. directory .. '" 2>/dev/null')
+    else
+        pfile = popen('/bin/ls -a "' .. directory .. '"')
+    end
     if pfile == nil then
         error("Error getting assets for specified pet")
     end
