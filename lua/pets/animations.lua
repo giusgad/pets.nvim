@@ -28,6 +28,7 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts)
     instance.actions = listdir(sourcedir)
     instance.frames = {}
     instance.popup = popup
+    instance.diying = false
 
     -- user options
     instance.row, instance.col = user_opts.row, user_opts.col
@@ -82,6 +83,10 @@ function M.Animation:next_frame()
     end
     if self.frame_counter > #self.frames[self.current_action] then -- true every 8 frames
         M.Animation.set_next_action(self)
+        if self.dead then
+            self.timer = nil
+            return
+        end
         self.frame_counter = 1
     end
     -- frames contains the images for every action
@@ -93,6 +98,15 @@ end
 
 -- @function decide which action comes after the following
 function M.Animation:set_next_action()
+    if self.dying then
+        if self.current_action == "die" then
+            self.dead = true
+            M.Animation.stop(self)
+            self.popup:unmount()
+        end
+        self.current_action = "die"
+        return
+    end
     local next_actions = {
         crouch = { "liedown", "sneak", "sit" },
         idle = { "idle_blink", "walk", "sit" },

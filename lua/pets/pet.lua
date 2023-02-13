@@ -47,8 +47,7 @@ end
 
 -- delete the pet :(
 function M.Pet:kill()
-    self.popup:unmount()
-    self.animation:stop()
+    self.animation.dying = true
 end
 
 return M
