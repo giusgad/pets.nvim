@@ -16,10 +16,10 @@ local listdir = require("pets.utils").listdir
 
 -- @param sourcedir the full path for the media directory
 -- @param type,style type and style of the pet
--- @param popup_width width of the popup in columns
+-- @param popup the popup where the pet is displayed
 -- @param user_opts table with user options
 -- @return a new animation instance
-function M.Animation.new(sourcedir, type, style, popup_width, user_opts)
+function M.Animation.new(sourcedir, type, style, popup, user_opts)
     local instance = setmetatable({}, M.Animation)
     instance.type = type
     instance.style = style
@@ -27,13 +27,13 @@ function M.Animation.new(sourcedir, type, style, popup_width, user_opts)
     instance.frame_counter = 1
     instance.actions = listdir(sourcedir)
     instance.frames = {}
-    instance.popup_width = popup_width
+    instance.popup = popup
 
     -- user options
     instance.row, instance.col = user_opts.row, user_opts.col
     instance.speed_multiplier = user_opts.speed_multiplier
-    if user_opts.col > popup_width - 8 then
-        M.base_col = popup_width - 8
+    if user_opts.col > popup.win_config.width - 8 then
+        M.base_col = popup.win_config.width - 8
     else
         M.base_col = user_opts.col
     end
@@ -110,13 +110,13 @@ end
 -- @function set horizontal movement per frame based on current action
 function M.Animation:set_next_col()
     if self.current_action == "walk" then
-        if self.col < self.popup_width - 8 then
+        if self.col < self.popup.win_config.width - 8 then
             self.col = self.col + 1
         else
             self.col = M.base_col
         end
     elseif self.current_action == "sneak" or self.current_action == "crouch" then
-        if self.col < self.popup_width - 8 then
+        if self.col < self.popup.win_config.width - 8 then
             if self.frame_counter % 2 == 0 then
                 self.col = self.col + 1
             end

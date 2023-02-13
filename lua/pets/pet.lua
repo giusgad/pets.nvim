@@ -34,13 +34,8 @@ function M.Pet.new(name, type, style, user_opts)
     instance.sourcedir = wd .. type .. "/" .. style .. "/"
 
     instance.popup = require("nui.popup")(popup_opts)
-    instance.animation = require("pets.animations").Animation.new(
-        instance.sourcedir,
-        type,
-        style,
-        instance.popup.win_config.width,
-        user_opts
-    )
+    instance.animation =
+        require("pets.animations").Animation.new(instance.sourcedir, type, style, instance.popup, user_opts)
     return instance
 end
 
