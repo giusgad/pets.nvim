@@ -6,6 +6,7 @@ M.options = {
     speed_multiplier = 1,
     default_pet = "cat",
     default_style = "brown",
+    random = true,
 }
 
 M.pets = {}

@@ -1,13 +1,19 @@
 local pets = require("pets")
+local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
 
 vim.api.nvim_create_user_command("PetsNew", function(input)
-    pets.create_pet(input.args, pets.options.default_pet, pets.options.default_style)
+    --TODO: validate style and type options
+    local pet, style = pets.options.default_pet, pets.options.default_style
+    if pets.options.random then
+        local styles = require("pets.utils").listdir(wd .. "cat")
+        pet, style = "cat", styles[math.random(#styles)]
+    end
+    pets.create_pet(input.args, pet, style)
 end, { nargs = 1 })
 
 local function autocomplete(_, cmdline)
     local matches = {}
     local words = vim.split(cmdline, " ", { trimempty = true })
-    local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
 
     if not vim.endswith(cmdline, " ") then
         table.remove(words, #words)
