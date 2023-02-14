@@ -8,6 +8,7 @@ M.options = {
     default_pet = "cat",
     default_style = "brown",
     random = true,
+    death_animation = true,
 }
 
 M.pets = {}

@@ -22,13 +22,14 @@ local popup_opts = {
 -- @param name the actual name for the pet
 -- @param type the species of the pet e.g. cat
 -- @param style the color/style of the pet e.g. brown
--- @param user_opts the table with user options (to be passed to Animation)
+-- @param user_opts the table with user options
 -- @return a new Pet instance
 function M.Pet.new(name, type, style, user_opts)
     local instance = setmetatable({}, M.Pet)
     instance.name = name
     instance.type = type
     instance.style = style
+    instance.death_animation = user_opts.death_animation
 
     local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
     instance.sourcedir = wd .. type .. "/" .. style .. "/"
@@ -47,7 +48,12 @@ end
 
 -- delete the pet :(
 function M.Pet:kill()
-    self.animation.dying = true
+    if self.death_animation then
+        self.animation.dying = true
+    else
+        self.animation:stop()
+        self.popup:unmount()
+    end
 end
 
 return M

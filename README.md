@@ -47,6 +47,7 @@ This is the default configuration:
   default_pet = "cat", -- the pet to use for the PetNew command
   default_style = "brown", -- the style of the pet to use for the PetNew command
   random = false, -- wether to use a random pet for the PetNew command, ovverides default_pet and default_style
+  death_animation = true, -- animate the pet's death, set to false to feel less guilt
 }
 ```
 
