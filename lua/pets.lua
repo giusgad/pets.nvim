@@ -1,4 +1,5 @@
 local M = {}
+local utils = require("pets.utils")
 
 M.options = {
     row = 5, -- the row (height) to display the pet at
@@ -27,7 +28,7 @@ end
 -- create a Pet object and add it to the pets table
 function M.create_pet(name, type, style)
     if M.pets[name] ~= nil then
-        vim.notify("Name already in use", vim.log.levels.WARN)
+        utils.warning('Name "' .. name .. '" already in use')
         return
     end
     local pet = require("pets.pet").Pet.new(name, type, style, M.options)
@@ -40,7 +41,7 @@ function M.kill_pet(name)
         M.pets[name]:kill()
         M.pets[name] = nil
     else
-        vim.notify("Pet name not found", vim.log.levels.WARN)
+        utils.warning("Couldn't find a pet named \"" .. name .. '"')
     end
 end
 

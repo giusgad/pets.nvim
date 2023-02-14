@@ -24,4 +24,8 @@ function M.listdir(directory, suppress)
     return t
 end
 
+function M.warning(msg)
+    vim.notify(msg, vim.log.levels.WARN)
+end
+
 return M
