@@ -1,11 +1,16 @@
 local pets = require("pets")
 local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
+local available_pets = {}
+for _, pet in pairs(require("pets.utils").listdir(wd)) do
+    local styles = require("pets.utils").listdir(wd .. pet)
+    available_pets[pet] = styles
+end
 
 vim.api.nvim_create_user_command("PetsNew", function(input)
     --TODO: validate style and type options
     local pet, style = pets.options.default_pet, pets.options.default_style
     if pets.options.random then
-        local styles = require("pets.utils").listdir(wd .. "cat")
+        local styles = available_pets["cat"]
         pet, style = "cat", styles[math.random(#styles)]
     end
     pets.create_pet(input.args, pet, style)
@@ -20,11 +25,11 @@ local function autocomplete(_, cmdline)
     end
 
     if #words == 1 then
-        for _, v in pairs(require("pets.utils").listdir(wd)) do
+        for _, v in available_pets do
             table.insert(matches, v)
         end
     elseif #words == 2 then
-        local styles = require("pets.utils").listdir(wd .. words[2], true)
+        local styles = available_pets[words[2]]
         for _, v in pairs(styles) do
             table.insert(matches, v)
         end
