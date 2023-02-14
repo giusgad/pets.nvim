@@ -53,8 +53,8 @@ function M.kill_all()
 end
 
 function M.list()
-    for _, pet in pairs(M.pets) do
-        print(pet.name)
+    for pet in pairs(M.pets) do
+        print(pet)
     end
 end
 
