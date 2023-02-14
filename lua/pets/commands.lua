@@ -1,64 +1,34 @@
 local pets = require("pets")
-local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
-local available_pets = {}
 local utils = require("pets.utils")
-for _, pet in pairs(utils.listdir(wd)) do
-    local styles = utils.listdir(wd .. pet)
-    available_pets[pet] = styles
-end
 
 vim.api.nvim_create_user_command("PetsNew", function(input)
     local pet, style = pets.options.default_pet, pets.options.default_style
 
     -- validate the pets and style options
-    if available_pets[pet] == nil then
-        utils.warning('The pet "' .. pet .. '" does not exist')
-        return
-    end
-    if available_pets[pet][style] then
-        utils.warning('The style "' .. style .. '" for "' .. pet .. '" does not exist')
+    if not utils.validate_type_style(pet, style) then
         return
     end
 
     if pets.options.random then
-        local styles = available_pets["cat"]
+        local styles = utils.available_pets["cat"]
         pet, style = "cat", styles[math.random(#styles)]
     end
 
     pets.create_pet(input.args, pet, style)
 end, { nargs = 1 })
 
-local function autocomplete_petsnew(_, cmdline)
-    local matches = {}
-    local words = vim.split(cmdline, " ", { trimempty = true })
-
-    if not vim.endswith(cmdline, " ") then
-        table.remove(words, #words)
-    end
-
-    if #words == 1 then
-        for _, v in available_pets do
-            table.insert(matches, v)
-        end
-    elseif #words == 2 then
-        local styles = available_pets[words[2]]
-        for _, v in pairs(styles) do
-            table.insert(matches, v)
-        end
-    end
-    return matches
-end
-
 vim.api.nvim_create_user_command("PetsNewCustom", function(input)
     local args = vim.split(input.args, " ", { trimempty = true })
     if #args ~= 3 then
-        local msg = "Inccorect number of arguments!\nUSAGE: PetsNewCustom {type} {style} {name}"
-        vim.notify(msg, vim.log.levels.WARN)
+        utils.warning("Inccorect number of arguments!\nUSAGE: PetsNewCustom {type} {style} {name}")
         return
     end
     local type, style, name = args[1], args[2], args[3]
+    if not utils.validate_type_style(type, style) then
+        return
+    end
     pets.create_pet(name, type, style)
-end, { nargs = 1, complete = autocomplete_petsnew })
+end, { nargs = 1, complete = utils.complete_typestyle })
 
 vim.api.nvim_create_user_command("PetsKillAll", function()
     pets.kill_all()
@@ -68,13 +38,7 @@ vim.api.nvim_create_user_command("PetsKill", function(input)
     pets.kill_pet(input.args)
 end, {
     nargs = 1,
-    complete = function()
-        local matches = {}
-        for k, _ in pairs(pets.pets) do
-            table.insert(matches, k)
-        end
-        return matches
-    end,
+    complete = utils.complete_name,
 })
 
 vim.api.nvim_create_user_command("PetsList", function()
