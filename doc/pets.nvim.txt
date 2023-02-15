@@ -22,6 +22,11 @@ protocol <https://sw.kovidgoyal.net/kitty/graphics-protocol/> and hologram.nvim
 terminal window. As you might know the plugin is heavily inspired by
 vscode-pets <https://github.com/tonybaloney/vscode-pets/tree/master/media>.
 
+<div class="figure">
+<img src="./pets.gif" title="fig:"/>
+<p class="caption">pets.gif</p>
+</div>
+
 📦 INSTALLATION                                *pets.nvim-📦-installation*
 
 Install with your favorite package manager!
