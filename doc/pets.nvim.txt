@@ -1,4 +1,4 @@
-*pets.nvim.txt*          For NVIM v0.8.0         Last change: 2023 February 14
+*pets.nvim.txt*          For NVIM v0.8.0         Last change: 2023 February 15
 
 ==============================================================================
 Table of Contents                                *pets.nvim-table-of-contents*
@@ -9,6 +9,7 @@ Table of Contents                                *pets.nvim-table-of-contents*
   - 🐾 Available pets                        |pets.nvim-🐾-available-pets|
   - 📑 Usage - commands                    |pets.nvim-📑-usage---commands|
   - ⚠️ Limitations                          |pets.nvim-⚠️-limitations|
+  - ✔️ Roadmap                                  |pets.nvim-✔️-roadmap|
   - 👏 Credits                                      |pets.nvim-👏-credits|
 
 ==============================================================================
@@ -95,7 +96,10 @@ the style and type defined by the configuration, and name {name} -
 name specified in the command - `PetsList`: prints the names of all the pets
 that are currently alive - `PetsKill {name}`: kills the pet with given name,
 which will immediately blink out of existence. Forever. - `PetsKillAll`: kills
-all the pets, poor creatures.
+all the pets, poor creatures. - `PetsPauseToggle`: pause/resume animations for
+all pets, leaving them on screen as cute little statues - `PetsHideToggle`:
+pause the animation for all pets and hide them / show all the pets again and
+resume animations
 
 ⚠️ LIMITATIONS                              *pets.nvim-⚠️-limitations*
 
@@ -105,6 +109,13 @@ significant ones: - Only works with terminal emulators that support the kitty
 graphics protocol <https://sw.kovidgoyal.net/kitty/graphics-protocol/> To be
 more precise the only terminal I tested where I was able to have the protocol
 working correctly is kitty itself. - Doesn’t currently work inside tmux
+
+✔️ ROADMAP                                      *pets.nvim-✔️-roadmap*
+
+
+- ☐ Handle window resizes
+- ☐ add more pets
+
 
 👏 CREDITS                                          *pets.nvim-👏-credits*
 
