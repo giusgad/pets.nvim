@@ -54,8 +54,23 @@ function M.kill_all()
 end
 
 function M.list()
+    if #M.pets == 0 then
+        print("You have no pets :(")
+    end
     for pet in pairs(M.pets) do
         print(pet)
+    end
+end
+
+function M.toggle_pause()
+    for _, pet in pairs(M.pets) do
+        pet:toggle_pause()
+    end
+end
+
+function M.toggle_hide()
+    for _, pet in pairs(M.pets) do
+        pet:toggle_hide()
     end
 end
 

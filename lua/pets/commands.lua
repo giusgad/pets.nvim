@@ -44,3 +44,11 @@ end, {
 vim.api.nvim_create_user_command("PetsList", function()
     pets.list()
 end, {})
+
+vim.api.nvim_create_user_command("PetsPauseToggle", function()
+    pets.toggle_pause()
+end, {})
+
+vim.api.nvim_create_user_command("PetsHideToggle", function()
+    pets.toggle_hide()
+end, {})

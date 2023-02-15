@@ -43,7 +43,7 @@ end
 -- start the animation of the pet
 function M.Pet:animate()
     self.popup:mount()
-    self.animation:start(self.popup.bufnr)
+    self.animation:start()
 end
 
 -- delete the pet :(
@@ -53,6 +53,34 @@ function M.Pet:kill()
     else
         self.animation:stop()
         self.popup:unmount()
+    end
+end
+
+function M.Pet:toggle_pause()
+    if not self.paused then
+        self.animation:stop_timer()
+        self.paused = true
+    else
+        if self.animation.current_image then
+            self.animation.current_image:delete(0, { free = false })
+        end
+        self.animation:start_timer()
+        self.paused = false
+    end
+end
+
+function M.Pet:toggle_hide()
+    if not self.paused then
+        self.animation:stop_timer()
+        if self.animation.current_image then
+            self.animation.current_image:delete(0, { free = false })
+        end
+        self.popup:unmount()
+        self.paused = true
+    else
+        self.popup:mount()
+        self.animation:start()
+        self.paused = false
     end
 end
 

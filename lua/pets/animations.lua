@@ -51,21 +51,35 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts)
     return instance
 end
 
--- @param bufnr buffer number of the popup
--- @function start the animation
-function M.Animation:start(bufnr)
-    if self.timer ~= nil then -- reset timer
-        self.timer = nil
+function M.Animation:start_timer()
+    if self.timer == nil then
+        self.timer = vim.loop.new_timer()
     end
-    self.timer = vim.loop.new_timer()
-    self.bufnr = bufnr
-    self.current_action = "idle"
-
     self.timer:start(0, 1000 / (self.speed_multiplier * 8), function()
         vim.schedule(function()
             M.Animation.next_frame(self)
         end)
     end)
+end
+
+function M.Animation:stop_timer()
+    if self.timer == nil then
+        return
+    end
+    self.timer:stop()
+    self.timer:close()
+    self.timer = nil
+end
+
+-- @param bufnr buffer number of the popup
+-- @function start the animation
+function M.Animation:start()
+    if self.timer ~= nil then -- reset timer
+        self.timer = nil
+    end
+    self.bufnr = self.popup.bufnr
+    self.current_action = self.current_action or "idle"
+    M.Animation.start_timer(self)
 end
 
 -- @function called on every tick from the timer, go to the next frame
@@ -146,6 +160,8 @@ function M.Animation:stop()
     end
     if self.timer then
         self.timer:stop()
+        self.timer:close()
+        self.timer = nil
     end
 end
 
