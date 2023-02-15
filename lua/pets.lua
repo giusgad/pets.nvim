@@ -54,11 +54,13 @@ function M.kill_all()
 end
 
 function M.list()
-    if #M.pets == 0 then
-        print("You have no pets :(")
-    end
+    local empty = true
     for pet in pairs(M.pets) do
         print(pet)
+        empty = false
+    end
+    if empty then
+        print("You have no pets :(")
     end
 end
 
