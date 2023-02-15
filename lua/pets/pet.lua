@@ -42,8 +42,8 @@ end
 
 -- start the animation of the pet
 function M.Pet:animate()
-    if self.animation.row <= 0 then
-        vim.notify("Row must be 1 or greater. Check your config", vim.log.levels.ERROR)
+    if self.animation.row <= 0 or self.animation.row > 10 then
+        vim.notify("Row must be >= 1 and <= 10. Check your config", vim.log.levels.ERROR)
         return
     end
     self.popup:mount()

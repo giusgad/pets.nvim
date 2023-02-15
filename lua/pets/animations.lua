@@ -5,10 +5,10 @@ M.Animation.__index = M.Animation
 -- lines to insert in the buffer to avoid image stretching
 local lines = {}
 local string = ""
-for _ = 0, 150 do
+for _ = 0, 200 do
     string = string .. " "
 end
-for _ = 0, 15 do
+for _ = 0, 20 do
     table.insert(lines, string)
 end
 
@@ -77,7 +77,6 @@ function M.Animation:start()
     if self.timer ~= nil then -- reset timer
         self.timer = nil
     end
-    self.bufnr = self.popup.bufnr
     self.current_action = self.current_action or "idle"
     M.Animation.start_timer(self)
 end
@@ -87,8 +86,8 @@ function M.Animation:next_frame()
     self.frame_counter = self.frame_counter + 1
 
     -- pouplate the buffer with spaces to avoid image distortion
-    if vim.api.nvim_buf_is_valid(self.bufnr) then
-        vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, lines)
+    if vim.api.nvim_buf_is_valid(self.popup.bufnr) then
+        vim.api.nvim_buf_set_lines(self.popup.bufnr, 0, -1, false, lines)
     end
     if not self.current_image then
         self.frame_counter = 1
@@ -98,7 +97,7 @@ function M.Animation:next_frame()
     if self.frame_counter > #self.frames[self.current_action] then -- true every 8 frames
         M.Animation.set_next_action(self)
         if self.dead then
-            self.timer = nil
+            M.Animation.stop_timer(self)
             return
         end
         self.frame_counter = 1
@@ -106,7 +105,7 @@ function M.Animation:next_frame()
     -- frames contains the images for every action
     local image = self.frames[self.current_action][self.frame_counter]
     M.Animation.set_next_col(self)
-    image:display(self.row, self.col, self.bufnr, {})
+    image:display(self.row, self.col, self.popup.bufnr, {})
     self.current_image = image
 end
 
