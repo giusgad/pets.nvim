@@ -40,7 +40,7 @@ require("pets").setup({
 This is the default configuration:
 ```lua
 {
-  row = 5, -- the row (height) to display the pet at (must be at least 1)
+  row = 1, -- the row (height) to display the pet at (must be at least 1 and at most 10)
   col = 0, -- the column to display the pet at (set to high number to have it stay still on the right side)
   speed_multiplier = 1, -- you can make your pet move faster/slower. If slower the animation will have lower fps.
   default_pet = "cat", -- the pet to use for the PetNew command
