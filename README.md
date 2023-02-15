@@ -3,6 +3,8 @@ Pets.nvim is a plugin that provides the missing core functionality of showing li
 It relies on the [kitty graphics protocol](https://sw.kovidgoyal.net/kitty/graphics-protocol/) and [hologram.nvim](https://github.com/edluffy/hologram.nvim) to be able to display images in a terminal window.
 As you might know the plugin is heavily inspired by [vscode-pets](https://github.com/tonybaloney/vscode-pets/tree/master/media).
 
+![pets.gif](./pets.gif)
+
 ## 📦 Installation
 
 Install with your favorite package manager!
