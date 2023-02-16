@@ -52,3 +52,7 @@ end, {})
 vim.api.nvim_create_user_command("PetsHideToggle", function()
     pets.toggle_hide()
 end, {})
+
+vim.api.nvim_create_user_command("PetsSleepToggle", function()
+    pets.toggle_sleep()
+end, {})

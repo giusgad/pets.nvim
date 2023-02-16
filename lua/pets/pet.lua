@@ -72,4 +72,8 @@ function M.Pet:toggle_hide()
     end
 end
 
+function M.Pet:toggle_sleep()
+    self.animation.sleeping = not self.animation.sleeping
+end
+
 return M

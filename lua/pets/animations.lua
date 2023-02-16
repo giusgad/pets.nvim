@@ -1,3 +1,5 @@
+local utils = require("pets.utils")
+
 local M = {}
 M.Animation = {}
 M.Animation.__index = M.Animation
@@ -28,7 +30,7 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts)
     instance.actions = listdir(sourcedir)
     instance.frames = {}
     instance.popup = popup
-    instance.diying = false
+    instance.sleeping = false
 
     -- user options
     instance.row, instance.col = user_opts.row, user_opts.col
@@ -129,8 +131,16 @@ function M.Animation:set_next_action()
         sneak = { "crouch", "walk", "liedown" },
         walk = { "idle", "idle_blink" },
     }
-    if math.random() < 0.5 then
-        self.current_action = next_actions[self.current_action][math.random(#next_actions[self.current_action])]
+    local sleeping_animations = {'idle', 'sit', 'liedown'}
+    if self.sleeping then
+        -- If the animation isn't currently a sleeping animtion, put the pet in it, otherwise loop the animation
+        if not utils.table_includes(sleeping_animations, self.current_action) then
+            self.current_action = sleeping_animations[math.random(#sleeping_animations)]
+        end
+    else
+        if math.random() < 0.5 then
+            self.current_action = next_actions[self.current_action][math.random(#next_actions[self.current_action])]
+        end
     end
 end
 
