@@ -81,6 +81,7 @@ These are all the available commands:
 - `PetsKillAll`: kills all the pets, poor creatures. Works just as PetsKill but for every pet.
 - `PetsPauseToggle`: pause/resume animations for all pets, leaving them on screen as cute little statues
 - `PetsHideToggle`: pause the animation for all pets and hide them / show all the pets again and resume animations
+- `PetsSleepToggle`: basically a do-not-disturb mode, pets are still animated but do not move around
 
 ## ⚠️ Limitations
 
