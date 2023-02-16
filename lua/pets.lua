@@ -100,4 +100,10 @@ function M.toggle_hide()
     end
 end
 
+function M.toggle_sleep()
+    for _, pet in pairs(M.pets) do
+        pet:toggle_sleep()
+    end
+end
+
 return M
