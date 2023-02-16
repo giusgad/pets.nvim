@@ -15,13 +15,18 @@ for _ = 0, 20 do
 end
 
 local listdir = require("pets.utils").listdir
+local sleeping_animations = {'idle', 'sit', 'liedown'}
+
+local function get_sleeping_animation()
+    return sleeping_animations[math.random(#sleeping_animations)]
+end
 
 -- @param sourcedir the full path for the media directory
 -- @param type,style type and style of the pet
 -- @param popup the popup where the pet is displayed
 -- @param user_opts table with user options
 -- @return a new animation instance
-function M.Animation.new(sourcedir, type, style, popup, user_opts)
+function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     local instance = setmetatable({}, M.Animation)
     instance.type = type
     instance.style = style
@@ -30,7 +35,7 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts)
     instance.actions = listdir(sourcedir)
     instance.frames = {}
     instance.popup = popup
-    instance.sleeping = false
+    instance.state = state
 
     -- user options
     instance.row, instance.col = user_opts.row, user_opts.col
@@ -65,6 +70,7 @@ function M.Animation:start_timer()
 end
 
 function M.Animation:stop_timer()
+    print()
     if self.timer == nil then
         return
     end
@@ -79,8 +85,18 @@ function M.Animation:start()
     if self.timer ~= nil then -- reset timer
         self.timer = nil
     end
-    self.current_action = self.current_action or "idle"
-    M.Animation.start_timer(self)
+
+    if self.state.sleeping then
+        self.current_action = get_sleeping_animation()
+    else
+        self.current_action = self.current_action or "idle"
+    end
+
+    if not self.state.paused and not self.state.hidden then
+        M.Animation.start_timer(self)
+    elseif self.state.paused and not self.state.hidden then
+        M.Animation.next_frame(self)
+    end
 end
 
 -- @function called on every tick from the timer, go to the next frame
@@ -131,11 +147,10 @@ function M.Animation:set_next_action()
         sneak = { "crouch", "walk", "liedown" },
         walk = { "idle", "idle_blink" },
     }
-    local sleeping_animations = {'idle', 'sit', 'liedown'}
-    if self.sleeping then
+    if self.state.sleeping then
         -- If the animation isn't currently a sleeping animtion, put the pet in it, otherwise loop the animation
         if not utils.table_includes(sleeping_animations, self.current_action) then
-            self.current_action = sleeping_animations[math.random(#sleeping_animations)]
+            self.current_action = get_sleeping_animation()
         end
     else
         if math.random() < 0.5 then
@@ -171,6 +186,34 @@ function M.Animation:stop()
         self.timer:stop()
         self.timer:close()
         self.timer = nil
+    end
+end
+
+function M.Animation:set_state(new_state)
+    for key, value in pairs(new_state) do
+        self.state[key] = value
+    end
+
+    if new_state.hidden ~= nil then
+        if self.state.hidden then
+            self:stop_timer()
+            if self.current_image then
+                self.current_image:delete(0, { free = false })
+            end
+            self.popup:unmount()
+        else
+            self.popup:mount()
+            self:start()
+        end
+    elseif new_state.paused ~= nil then
+        if self.state.paused then
+            self:stop_timer()
+        else
+            if self.current_image then
+                self.current_image:delete(0, { free = false })
+            end
+            self:start_timer()
+        end
     end
 end
 
