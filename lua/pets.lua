@@ -9,6 +9,7 @@ M.options = {
     default_style = "brown",
     random = true,
     death_animation = true,
+    popup = { width = "30%", winblend = 100, hl = { Normal = "Normal" }, avoid_statusline = false },
 }
 
 M.pets = {}
@@ -16,6 +17,29 @@ M.pets = {}
 function M.setup(options)
     options = options or {}
     M.options = vim.tbl_deep_extend("force", M.options, options)
+
+    -- popup opts
+    local popup_opts = {
+        position = {
+            row = "100%",
+            col = "100%",
+        },
+        size = {
+            width = M.options.popup.width,
+            height = 10,
+        },
+        focusable = false,
+        enter = false,
+        win_options = {
+            winblend = M.options.popup.winblend,
+        },
+    }
+    if M.options.popup.avoid_statusline then
+        local hl = utils.parse_popup_hl(M.options.popup.hl)
+        popup_opts.position.row = "99%"
+        popup_opts.win_options = { winhighlight = hl }
+    end
+    M.options.popup = popup_opts
 
     -- init hologram
     local ok = pcall(require, "hologram")

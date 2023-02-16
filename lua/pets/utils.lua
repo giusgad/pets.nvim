@@ -79,4 +79,13 @@ function M.warning(msg)
     vim.notify(msg, vim.log.levels.WARN)
 end
 
+function M.parse_popup_hl(highlight)
+    return table.concat(
+        vim.tbl_map(function(key)
+            return key .. ":" .. highlight[key]
+        end, vim.tbl_keys(highlight)),
+        ","
+    )
+end
+
 return M

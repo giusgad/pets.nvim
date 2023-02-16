@@ -2,6 +2,7 @@
 Pets.nvim is a plugin that provides the missing core functionality of showing little animal friends inside your editor.
 It relies on the [kitty graphics protocol](https://sw.kovidgoyal.net/kitty/graphics-protocol/) and [hologram.nvim](https://github.com/edluffy/hologram.nvim) to be able to display images in a terminal window.
 As you might know the plugin is heavily inspired by [vscode-pets](https://github.com/tonybaloney/vscode-pets/tree/master/media).
+If you like the art for the pets, check out the [Credits](#-Credits) section.
 
 ![pets.gif](./pets.gif)
 
@@ -47,8 +48,19 @@ This is the default configuration:
   default_style = "brown", -- the style of the pet to use for the PetNew command
   random = false, -- wether to use a random pet for the PetNew command, ovverides default_pet and default_style
   death_animation = true, -- animate the pet's death, set to false to feel less guilt
+  popup = { -- popup options, try changing these if you see a rectangle around the pets
+    width = "30%", -- can be a string with percentage like "45%" or a number of columns like 45
+    winblend = 100, -- winblend value - see :h 'winblend' - only used if avoid_statusline is false
+    hl = { Normal = "Normal" }, -- hl is only set if avoid_statusline is true, you can put any hl group instead of "Normal"
+    avoid_statusline = false, -- if winblend is 100 then the popup is invisible and covers the statusline, if that
+    -- doesn't work for you then set this to true and the popup will use hl and will be spawned above the statusline (hopefully)
+  }
 }
 ```
+### ❔ FAQ - if things don't work
+- If the pet is not at the height you desire change the row option
+- If you're seeing a square around the pets, try setting avoid_statusline to true and/or winblend to 0.
+    If this doesn't work then open an issue and I'll try to look into it when I can.
 
 ## 🐾 Available pets
 
