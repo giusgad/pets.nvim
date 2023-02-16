@@ -4,7 +4,9 @@ It relies on the [kitty graphics protocol](https://sw.kovidgoyal.net/kitty/graph
 As you might know the plugin is heavily inspired by [vscode-pets](https://github.com/tonybaloney/vscode-pets/tree/master/media).
 If you like the art for the pets, check out the [Credits](#-Credits) section.
 
+<!-- panvimdoc-ignore-start -->
 ![pets.gif](./pets.gif)
+<!-- panvimdoc-ignore-end -->
 
 ## 📦 Installation
 
@@ -99,3 +101,14 @@ and shares all of its limitations. Here are the most significant ones:
 ## 👏 Credits
 
 All the beautiful cat assets were designed by [SeethingSwarm](https://seethingswarm.itch.io/catset)
+
+<!-- panvimdoc-ignore-start -->
+## 🙏 Acknowledgements
+
+A big thanks to everyone that helps or will help the project!
+
+<a href="https://github.com/giusgad/pets.nvim/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=giusgad/pets.nvim" />
+</a>
+
+<!-- panvimdoc-ignore-end -->
