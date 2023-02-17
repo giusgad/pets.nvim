@@ -43,6 +43,10 @@ end
 
 -- delete the pet :(
 function M.Pet:kill()
+    if self.animation.state.paused then
+        self.animation:stop()
+        self.popup:unmount()
+    end
     if self.death_animation then
         self.animation.dying = true
     else
@@ -52,16 +56,12 @@ function M.Pet:kill()
 end
 
 function M.Pet:set_paused(paused)
-    self.state.paused = paused
     self.animation:set_state({
         paused = paused,
     })
 end
 
 function M.Pet:set_hidden(hidden)
-    self.state.hidden = hidden
-    self.state.paused = hidden
-
     self.animation:set_state({
         hidden = hidden,
         paused = hidden,
