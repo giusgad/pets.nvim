@@ -108,6 +108,8 @@ function M.toggle_hide()
     hidden = not hidden
     if hidden then -- Hiding relies on the pets being paused as well
         paused = true
+    else
+        paused = false
     end
     for _, pet in pairs(M.pets) do
         pet:set_hidden(hidden)

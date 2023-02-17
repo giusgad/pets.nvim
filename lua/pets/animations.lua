@@ -15,7 +15,7 @@ for _ = 0, 20 do
 end
 
 local listdir = require("pets.utils").listdir
-local sleeping_animations = {'idle', 'sit', 'liedown'}
+local sleeping_animations = { "idle", "sit", "liedown" }
 
 local function get_sleeping_animation()
     return sleeping_animations[math.random(#sleeping_animations)]
@@ -104,9 +104,10 @@ function M.Animation:next_frame()
     self.frame_counter = self.frame_counter + 1
 
     -- pouplate the buffer with spaces to avoid image distortion
-    if vim.api.nvim_buf_is_valid(self.popup.bufnr) then
-        vim.api.nvim_buf_set_lines(self.popup.bufnr, 0, -1, false, lines)
+    if not vim.api.nvim_buf_is_valid(self.popup.bufnr) then
+        return
     end
+    vim.api.nvim_buf_set_lines(self.popup.bufnr, 0, -1, false, lines)
     if not self.current_image then
         self.frame_counter = 1
     else
@@ -205,7 +206,8 @@ function M.Animation:set_state(new_state)
             self.popup:mount()
             self:start()
         end
-    elseif new_state.paused ~= nil then
+    end
+    if new_state.paused ~= nil then
         if self.state.paused then
             self:stop_timer()
         else
