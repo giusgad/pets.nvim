@@ -59,9 +59,10 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
 end
 
 function M.Animation:start_timer()
-    if self.timer == nil then
-        self.timer = vim.loop.new_timer()
+    if self.timer ~= nil then
+        self:stop_timer()
     end
+    self.timer = vim.loop.new_timer()
     self.timer:start(0, 1000 / (self.speed_multiplier * 8), function()
         vim.schedule(function()
             M.Animation.next_frame(self)
@@ -104,7 +105,7 @@ function M.Animation:next_frame()
     self.frame_counter = self.frame_counter + 1
 
     -- pouplate the buffer with spaces to avoid image distortion
-    if not vim.api.nvim_buf_is_valid(self.popup.bufnr) then
+    if self.popup.bufnr == nil or not vim.api.nvim_buf_is_valid(self.popup.bufnr) then
         return
     end
     vim.api.nvim_buf_set_lines(self.popup.bufnr, 0, -1, false, lines)
@@ -206,15 +207,14 @@ function M.Animation:set_state(new_state)
             self.popup:mount()
             self:start()
         end
-    end
-    if new_state.paused ~= nil then
+    elseif new_state.paused ~= nil then
         if self.state.paused then
             self:stop_timer()
         else
             if self.current_image then
                 self.current_image:delete(0, { free = false })
             end
-            self:start_timer()
+            self:start()
         end
     end
 end
