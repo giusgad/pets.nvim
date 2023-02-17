@@ -96,7 +96,9 @@ function M.Animation:start()
     if not self.state.paused and not self.state.hidden then
         M.Animation.start_timer(self)
     elseif self.state.paused and not self.state.hidden then
-        M.Animation.next_frame(self)
+        vim.schedule(function()
+            M.Animation.next_frame(self)
+        end)
     end
 end
 
