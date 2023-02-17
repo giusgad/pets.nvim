@@ -8,19 +8,26 @@ M.Pet.__index = M.Pet
 -- @param style the color/style of the pet e.g. brown
 -- @param user_opts the table with user options
 -- @return a new Pet instance
-function M.Pet.new(name, type, style, user_opts)
+function M.Pet.new(name, type, style, user_opts, state)
     local instance = setmetatable({}, M.Pet)
     instance.name = name
     instance.type = type
     instance.style = style
     instance.death_animation = user_opts.death_animation
+    instance.state = state
 
     local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
     instance.sourcedir = wd .. type .. "/" .. style .. "/"
 
     instance.popup = require("nui.popup")(user_opts.popup)
-    instance.animation =
-        require("pets.animations").Animation.new(instance.sourcedir, type, style, instance.popup, user_opts)
+    instance.animation = require("pets.animations").Animation.new(
+        instance.sourcedir,
+        type,
+        style,
+        instance.popup,
+        user_opts,
+        instance.state
+    )
     return instance
 end
 
@@ -44,36 +51,25 @@ function M.Pet:kill()
     end
 end
 
-function M.Pet:toggle_pause()
-    if not self.paused then
-        self.animation:stop_timer()
-        self.paused = true
-    else
-        if self.animation.current_image then
-            self.animation.current_image:delete(0, { free = false })
-        end
-        self.animation:start_timer()
-        self.paused = false
-    end
+function M.Pet:set_paused(paused)
+    self.state.paused = paused
+    self.animation:set_state({
+        paused = paused,
+    })
 end
 
-function M.Pet:toggle_hide()
-    if not self.paused then
-        self.animation:stop_timer()
-        if self.animation.current_image then
-            self.animation.current_image:delete(0, { free = false })
-        end
-        self.popup:unmount()
-        self.paused = true
-    else
-        self.popup:mount()
-        self.animation:start()
-        self.paused = false
-    end
+function M.Pet:set_hidden(hidden)
+    self.state.hidden = hidden
+    self.state.paused = hidden
+
+    self.animation:set_state({
+        hidden = hidden,
+        paused = hidden,
+    })
 end
 
-function M.Pet:toggle_sleep()
-    self.animation.sleeping = not self.animation.sleeping
+function M.Pet:set_sleep(sleeping)
+    self.animation:set_state({ sleeping = sleeping })
 end
 
 return M

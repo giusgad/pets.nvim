@@ -1,6 +1,10 @@
 local M = {}
 local utils = require("pets.utils")
 
+local paused = false
+local hidden = false
+local sleeping = false
+
 M.options = {
     row = 1, -- the row (height) to display the pet at
     col = 0, -- the column to display the pet at (set to high numeber to have it stay stil at the right)
@@ -56,7 +60,12 @@ function M.create_pet(name, type, style)
         utils.warning('Name "' .. name .. '" already in use')
         return
     end
-    local pet = require("pets.pet").Pet.new(name, type, style, M.options)
+    local state = {
+        paused = paused,
+        hidden = hidden,
+        sleeping = sleeping,
+    }
+    local pet = require("pets.pet").Pet.new(name, type, style, M.options, state)
     pet:animate()
     M.pets[pet.name] = pet
 end
@@ -89,20 +98,28 @@ function M.list()
 end
 
 function M.toggle_pause()
+    paused = not paused
     for _, pet in pairs(M.pets) do
-        pet:toggle_pause()
+        pet:set_paused(paused)
     end
 end
 
 function M.toggle_hide()
+    hidden = not hidden
+    if hidden then -- Hiding relies on the pets being paused as well
+        paused = true
+    else
+        paused = false
+    end
     for _, pet in pairs(M.pets) do
-        pet:toggle_hide()
+        pet:set_hidden(hidden)
     end
 end
 
 function M.toggle_sleep()
+    sleeping = not sleeping
     for _, pet in pairs(M.pets) do
-        pet:toggle_sleep()
+        pet:set_sleep(sleeping)
     end
 end
 
