@@ -6,13 +6,6 @@ M.Animation.__index = M.Animation
 
 -- lines to insert in the buffer to avoid image stretching
 local lines = {}
-local string = ""
-for _ = 0, 200 do
-    string = string .. " "
-end
-for _ = 0, 20 do
-    table.insert(lines, string)
-end
 
 local listdir = require("pets.utils").listdir
 local sleeping_animations = { "idle", "sit", "liedown" }
@@ -36,6 +29,10 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     instance.frames = {}
     instance.popup = popup
     instance.state = state
+
+    for _ = 1, instance.popup._.layout.size.height do
+        table.insert(lines, " ")
+    end
 
     -- user options
     instance.row, instance.col = user_opts.row, user_opts.col
