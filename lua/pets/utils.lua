@@ -88,13 +88,4 @@ function M.parse_popup_hl(highlight)
     )
 end
 
-function M.table_includes(table, key)
-    for _, value in ipairs(table) do
-        if value == key then
-            return true
-        end
-    end
-    return false
-end
-
 return M

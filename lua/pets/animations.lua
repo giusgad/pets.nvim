@@ -150,7 +150,7 @@ function M.Animation:set_next_action()
     }
     if self.state.sleeping then
         -- If the animation isn't currently a sleeping animtion, put the pet in it, otherwise loop the animation
-        if not utils.table_includes(sleeping_animations, self.current_action) then
+        if not vim.tbl_contains(sleeping_animations, self.current_action) then
             self.current_action = get_sleeping_animation()
         end
     else
