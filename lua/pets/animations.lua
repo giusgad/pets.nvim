@@ -102,7 +102,6 @@ end
 -- @function called on every tick from the timer, go to the next frame
 function M.Animation:next_frame()
     self.frame_counter = self.frame_counter + 1
-
     -- pouplate the buffer with spaces to avoid image distortion
     if self.popup.bufnr == nil or not vim.api.nvim_buf_is_valid(self.popup.bufnr) then
         return
@@ -124,7 +123,15 @@ function M.Animation:next_frame()
     -- frames contains the images for every action
     local image = self.frames[self.current_action][self.frame_counter]
     M.Animation.set_next_col(self)
-    image:display(self.row, self.col, self.popup.bufnr, {})
+    local ok = pcall(image.display, image, self.row, self.col, self.popup.bufnr, {})
+    if not ok then
+        require("pets").hidden = true
+        self:stop()
+        if self.popup then
+            self.popup:unmount()
+        end
+        utils.warning("Something went wrong, pets are hidden")
+    end
     self.current_image = image
 end
 
