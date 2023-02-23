@@ -1,9 +1,9 @@
 local M = {}
 local utils = require("pets.utils")
 
-local paused = false
-local hidden = false
-local sleeping = false
+M.paused = false
+M.paused = false
+M.sleeping = false
 
 M.options = {
     row = 1, -- the row (height) to display the pet at
@@ -28,6 +28,7 @@ function M.setup(options)
             row = "100%",
             col = "100%",
         },
+        relative = "win",
         size = {
             width = M.options.popup.width,
             height = 10,
@@ -61,9 +62,9 @@ function M.create_pet(name, type, style)
         return
     end
     local state = {
-        paused = paused,
-        hidden = hidden,
-        sleeping = sleeping,
+        paused = M.paused,
+        hidden = M.paused,
+        sleeping = M.sleeping,
     }
     local pet = require("pets.pet").Pet.new(name, type, style, M.options, state)
     pet:animate()
@@ -98,28 +99,28 @@ function M.list()
 end
 
 function M.toggle_pause()
-    paused = not paused
+    M.paused = not M.paused
     for _, pet in pairs(M.pets) do
-        pet:set_paused(paused)
+        pet:set_paused(M.paused)
     end
 end
 
 function M.toggle_hide()
-    hidden = not hidden
-    if hidden then -- Hiding relies on the pets being paused as well
-        paused = true
+    M.hidden = not M.hidden
+    if M.hidden then -- Hiding relies on the pets being paused as well
+        M.paused = true
     else
-        paused = false
+        M.paused = false
     end
     for _, pet in pairs(M.pets) do
-        pet:set_hidden(hidden)
+        pet:set_hidden(M.paused)
     end
 end
 
 function M.toggle_sleep()
-    sleeping = not sleeping
+    M.sleeping = not M.sleeping
     for _, pet in pairs(M.pets) do
-        pet:set_sleep(sleeping)
+        pet:set_sleep(M.sleeping)
     end
 end
 
