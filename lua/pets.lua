@@ -28,7 +28,7 @@ function M.setup(options)
             row = "100%",
             col = "100%",
         },
-        relative = "win",
+        relative = "editor",
         size = {
             width = M.options.popup.width,
             height = 10,
