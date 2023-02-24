@@ -1,8 +1,6 @@
-name: Bug report
-about: Report an issue or bug
-title: ''
-labels: bug
-assignees: ''
+name: "Bug report"
+description: "Report an issue or a bug"
+labels: "bug:
 body:
   - type: textarea
     attributes:
@@ -17,17 +15,13 @@ body:
         3. ...
   - type: textarea
     attributes:
-      label: "Description"
-      placeholder: "When I do this, this happens"
+      label: "Your options"
+      placeholder: "The options you use in the setup function"
+      render: Lua
   - type: textarea
     attributes:
       label: "Screenshots"
       placeholder: "Insert screeenshots if necessary"
-  - type: textarea
-    attributes:
-      label: "Your options"
-      placeholder: "The options you use in the setup function"
-      render: "lua"
   - type: textarea
     attributes:
       label: "Extra"
