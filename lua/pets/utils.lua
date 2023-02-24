@@ -1,28 +1,12 @@
 local M = {}
 M.available_pets = {}
 
--- list all files in a directory
--- source: https://stackoverflow.com/a/11130774
-function M.listdir(directory, suppress)
-    suppress = suppress or false
-    local i, t, popen = 0, {}, io.popen
-    local pfile
-    if suppress then
-        pfile = popen('/bin/ls -a "' .. directory .. '" 2>/dev/null')
-    else
-        pfile = popen('/bin/ls -a "' .. directory .. '"')
-    end
-    if pfile == nil then
-        error("Error getting assets for specified pet")
-    end
-    for filename in pfile:lines() do
-        if filename ~= "." and filename ~= ".." then
-            i = i + 1
-            t[i] = filename
-        end
-    end
-    pfile:close()
-    return t
+function M.listdir(path)
+  local sol = {}
+  for val in vim.fs.dir(path) do
+    table.insert(sol, val)
+  end
+  return sol
 end
 
 local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
