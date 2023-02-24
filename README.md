@@ -19,7 +19,7 @@ With packer:
 use({
   "giusgad/pets.nvim",
   requires = {
-    "edluffy/hologram.nvim",
+    "giusgad/hologram.nvim",
     "MunifTanjim/nui.nvim",
   }
 })
@@ -28,7 +28,7 @@ With lazy:
 ```lua
 {
   "giusgad/pets.nvim",
-  dependencies = { "MunifTanjim/nui.nvim", "edluffy/hologram.nvim" },
+  dependencies = { "MunifTanjim/nui.nvim", "giusgad/hologram.nvim" },
 }
 ```
 And then call 
@@ -37,6 +37,8 @@ require("pets").setup({
   -- your options here
 })
 ```
+>Note: if you want to use the original `hologram.nvim` instead of my fork,replace `giusgad/hologram.nvim` with `edluffy/hologram.nvim`.
+>My fork for now only fixes errors with hologram `auto_display = true`, and the plugin should not have any other issues with the original.
 
 ## ⚙️ Configuration
 
@@ -59,10 +61,12 @@ This is the default configuration:
   }
 }
 ```
-### ❔ FAQ - if things don't work
-- If the pet is not at the height you desire change the row option
-- If you're seeing a square around the pets, try setting avoid_statusline to true and/or winblend to 0.
-    If this doesn't work then open an issue and I'll try to look into it when I can.
+
+## ❔ FAQ - if something doesn't work
+
+- If the pet is not at the height you desire change the `row` option (higher row means the pet is displayed lower on the screen)
+- If you're seeing a square around the pets, try setting `avoid_statusline` to `true`. If you're still seeing it
+    try setting `winblend` to 0 or using a custom highlight group as shown [above](#-Configuration).
 
 ## 🐾 Available pets
 
@@ -93,11 +97,6 @@ and shares all of its limitations. Here are the most significant ones:
     To be more precise the only terminal I tested where I was able to have the protocol working correctly is kitty itself.
 - Doesn't currently work inside tmux
 
-## ✔️ Roadmap
-- [ ] Handle window resizes
-- [ ] add more pets
-- [ ] add an option to change the pet's size
-
 ## 👏 Credits
 
 All the beautiful cat assets were designed by [SeethingSwarm](https://seethingswarm.itch.io/catset)
@@ -105,7 +104,7 @@ All the beautiful cat assets were designed by [SeethingSwarm](https://seethingsw
 <!-- panvimdoc-ignore-start -->
 ## 🙏 Acknowledgements
 
-A big thanks to everyone that helps or will help the project!
+A big thanks to everyone that helped, helps or will help the project!
 
 <a href="https://github.com/giusgad/pets.nvim/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=giusgad/pets.nvim" />
