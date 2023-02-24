@@ -125,12 +125,17 @@ function M.Animation:next_frame()
     M.Animation.set_next_col(self)
     local ok = pcall(image.display, image, self.row, self.col, self.popup.bufnr, {})
     if not ok then
-        require("pets").hidden = true
         self:stop()
         if self.popup then
             self.popup:unmount()
         end
-        utils.warning("Something went wrong, pets are hidden")
+        if self.current_image then
+            self.current_image:delete()
+        end
+        if not self.hidden then
+            self.popup:mount()
+            self:start()
+        end
     end
     self.current_image = image
 end
