@@ -3,20 +3,15 @@ M.available_pets = {}
 
 -- list all files in a directory
 -- source: https://stackoverflow.com/a/11130774
-function M.listdir(directory, suppress)
-    suppress = suppress or false
+function M.listdir(directory)
     local i, t, popen = 0, {}, io.popen
     local pfile
-    if suppress then
-        pfile = popen('/bin/ls -a "' .. directory .. '" 2>/dev/null')
-    else
-        pfile = popen('/bin/ls -a "' .. directory .. '"')
-    end
+    pfile = popen('/bin/ls -a "' .. directory .. '"')
     if pfile == nil then
         error("Error getting assets for specified pet")
     end
     for filename in pfile:lines() do
-        if filename ~= "." and filename ~= ".." then
+        if filename ~= "." and filename ~= ".." and not vim.endswith(filename, "sh") then
             i = i + 1
             t[i] = filename
         end

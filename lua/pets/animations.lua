@@ -10,7 +10,7 @@ local lines = {}
 local listdir = require("pets.utils").listdir
 local sleeping_animations = { "idle", "sit", "liedown" }
 
-local function get_sleeping_animation()
+local function get_sleeping_animation() -- TODO:
     return sleeping_animations[math.random(#sleeping_animations)]
 end
 
@@ -18,6 +18,7 @@ end
 -- @param type,style type and style of the pet
 -- @param popup the popup where the pet is displayed
 -- @param user_opts table with user options
+-- @param state table with the current plugin state (sleeping, paused, hidden)
 -- @return a new animation instance
 function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     local instance = setmetatable({}, M.Animation)
@@ -45,17 +46,28 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
 
     -- setup frames
     for _, action in pairs(instance.actions) do
-        local current_actions = {}
+        local current_frames = {}
         for _, file in pairs(listdir(sourcedir .. action)) do
             local image = require("hologram.image"):new(sourcedir .. action .. "/" .. file)
-            table.insert(current_actions, image)
+            table.insert(current_frames, image)
         end
-        instance.frames[action] = current_actions
+        instance.frames[action] = current_frames
     end
+
+    -- setup next_actions
+    instance.next_actions = {
+        idle = { "sit", "liedown", "walk", "run", "pee" },
+        liedown = { "sit", "idle" },
+        pee = { "idle", "sit" },
+        run = { "walk", "idle" },
+        sit = { "walk", "liedown", "pee" },
+        walk = { "run", "idle" },
+    }
+
     return instance
 end
 
-function M.Animation:start_timer()
+function M.Animation:start_timer(interval)
     if self.timer ~= nil then
         self:stop_timer()
     end
@@ -68,7 +80,6 @@ function M.Animation:start_timer()
 end
 
 function M.Animation:stop_timer()
-    print()
     if self.timer == nil then
         return
     end
@@ -83,6 +94,7 @@ function M.Animation:start()
     if self.timer ~= nil then -- reset timer
         self.timer = nil
     end
+    self.repetitions = 0
 
     if self.state.sleeping then
         self.current_action = get_sleeping_animation()
@@ -101,7 +113,6 @@ end
 
 -- @function called on every tick from the timer, go to the next frame
 function M.Animation:next_frame()
-    self.frame_counter = self.frame_counter + 1
     -- pouplate the buffer with spaces to avoid image distortion
     if self.popup.bufnr == nil or not vim.api.nvim_buf_is_valid(self.popup.bufnr) then
         return
@@ -112,15 +123,20 @@ function M.Animation:next_frame()
     else
         self.current_image:delete(0, { free = false })
     end
-    if self.frame_counter > #self.frames[self.current_action] then -- true every 8 frames
-        M.Animation.set_next_action(self)
+    if self.frame_counter > #self.frames[self.current_action] then -- what to do when current frames end
+        self.repetitions = self.repetitions + 1
+        -- if the animation lasted at least 8 frames go to the next one else repeat it (useful for 1 or 4 frames animations)
+        if self.repetitions * #self.frames[self.current_action] >= 8 then
+            M.Animation.set_next_action(self)
+            self.repetitions = 0
+        end
         if self.dead then
-            M.Animation.stop_timer(self)
+            self:stop()
             return
         end
-        self.frame_counter = 1
+        self.frame_counter = 1 -- reset the frame counter
     end
-    -- frames contains the images for every action
+    -- the frames table contains the images for every action
     local image = self.frames[self.current_action][self.frame_counter]
     M.Animation.set_next_col(self)
     local ok = pcall(image.display, image, self.row, self.col, self.popup.bufnr, {})
@@ -138,6 +154,7 @@ function M.Animation:next_frame()
         end
     end
     self.current_image = image
+    self.frame_counter = self.frame_counter + 1
 end
 
 -- @function decide which action comes after the following
@@ -151,15 +168,6 @@ function M.Animation:set_next_action()
         self.current_action = "die"
         return
     end
-    local next_actions = {
-        crouch = { "liedown", "sneak", "sit" },
-        idle = { "idle_blink", "walk", "sit" },
-        idle_blink = { "idle", "walk", "sit" },
-        liedown = { "sneak", "crouch" },
-        sit = { "idle", "idle_blink", "crouch", "liedown" },
-        sneak = { "crouch", "walk", "liedown" },
-        walk = { "idle", "idle_blink" },
-    }
     if self.state.sleeping then
         -- If the animation isn't currently a sleeping animtion, put the pet in it, otherwise loop the animation
         if not vim.tbl_contains(sleeping_animations, self.current_action) then
@@ -167,7 +175,8 @@ function M.Animation:set_next_action()
         end
     else
         if math.random() < 0.5 then
-            self.current_action = next_actions[self.current_action][math.random(#next_actions[self.current_action])]
+            self.current_action =
+                self.next_actions[self.current_action][math.random(#self.next_actions[self.current_action])]
         end
     end
 end
@@ -180,11 +189,9 @@ function M.Animation:set_next_col()
         else
             self.col = M.base_col
         end
-    elseif self.current_action == "sneak" or self.current_action == "crouch" then
+    elseif self.current_action == "run" then
         if self.col < self.popup.win_config.width - 8 then
-            if self.frame_counter % 2 == 0 then
-                self.col = self.col + 1
-            end
+            self.col = self.col + 2
         else
             self.col = M.base_col
         end
@@ -195,11 +202,7 @@ function M.Animation:stop()
     if self.current_image then
         self.current_image:delete(0, { free = false })
     end
-    if self.timer then
-        self.timer:stop()
-        self.timer:close()
-        self.timer = nil
-    end
+    self:stop_timer()
 end
 
 function M.Animation:set_state(new_state)

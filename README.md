@@ -1,5 +1,4 @@
 # pets.nvim
-> ⚠️⚠️⚠️ Currently the plugin is not working and is searching for new assets. See #26
 
 Pets.nvim is a plugin that provides the missing core functionality of showing little animal friends inside your editor.
 It relies on the [kitty graphics protocol](https://sw.kovidgoyal.net/kitty/graphics-protocol/) and [hologram.nvim](https://github.com/edluffy/hologram.nvim) to be able to display images in a terminal window.
@@ -47,13 +46,13 @@ require("pets").setup({
 This is the default configuration:
 ```lua
 {
-  row = 1, -- the row (height) to display the pet at (must be at least 1 and at most 10)
+  row = 1, -- the row (height) to display the pet at (higher row means the pet is lower on the screen), must be 1<=row<=10
   col = 0, -- the column to display the pet at (set to high number to have it stay still on the right side)
   speed_multiplier = 1, -- you can make your pet move faster/slower. If slower the animation will have lower fps.
-  default_pet = "cat", -- the pet to use for the PetNew command
+  default_pet = "dog", -- the pet to use for the PetNew command
   default_style = "brown", -- the style of the pet to use for the PetNew command
-  random = false, -- wether to use a random pet for the PetNew command, ovverides default_pet and default_style
-  death_animation = true, -- animate the pet's death, set to false to feel less guilt
+  random = true, -- wether to use a random pet for the PetNew command, ovverides default_pet and default_style
+  -- death_animation = true, -- animate the pet's death, set to false to feel less guilt -- currently no animations are available
   popup = { -- popup options, try changing these if you see a rectangle around the pets
     width = "30%", -- can be a string with percentage like "45%" or a number of columns like 45
     winblend = 100, -- winblend value - see :h 'winblend' - only used if avoid_statusline is false
@@ -68,16 +67,16 @@ This is the default configuration:
 
 - If the pet is not at the height you desire change the `row` option (higher row means the pet is displayed lower on the screen)
 - If you're seeing a square around the pets, try setting `avoid_statusline` to `true`. If you're still seeing it
-    try setting `winblend` to 0 or using a custom highlight group as shown [above](#-Configuration).
+    try setting `winblend` to 0 or using a custom highlight group as shown [above](#-Configuration) and in #8.
+- If you don't see the pet at all checkout the [limitations](#-Limitations) and try changing the row value.
 
 ## 🐾 Available pets
 
-- cat:
-    - black
-    - red
+- dog:
     - brown
-    - dark_grey
-    - light_grey
+    - black
+    - gray
+    - beige
 
 ## 📑 Usage - commands
 
@@ -101,7 +100,9 @@ and shares all of its limitations. Here are the most significant ones:
 
 ## 👏 Credits
 
-All the beautiful cat assets were designed by [SeethingSwarm](https://seethingswarm.itch.io/catset)
+The dog assets were created by [NVPH Studio](https://nvph-studio.itch.io/dog-animation-4-different-dogs). All the details about the license
+can be found [here](https://creativecommons.org/licenses/by-nd/4.0/#).
+The old cat assets were designed by [SeethingSwarm](https://seethingswarm.itch.io/catset).
 
 <!-- panvimdoc-ignore-start -->
 ## 🙏 Acknowledgements
@@ -109,7 +110,7 @@ All the beautiful cat assets were designed by [SeethingSwarm](https://seethingsw
 A big thanks to everyone that helped, helps or will help the project!
 
 <a href="https://github.com/giusgad/pets.nvim/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=giusgad/pets.nvim" />
+  <img src="https://contrib.rocks/image?repo=giusgad/pets.nvim"/>
 </a>
 
 <!-- panvimdoc-ignore-end -->

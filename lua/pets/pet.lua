@@ -47,7 +47,7 @@ function M.Pet:kill()
         self.animation:stop()
         self.popup:unmount()
     end
-    if self.death_animation then
+    if self.death_animation and self.animation.frames["die"] ~= nil then
         self.animation.dying = true
     else
         self.animation:stop()
