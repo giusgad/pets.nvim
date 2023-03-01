@@ -100,9 +100,9 @@ and shares all of its limitations. Here are the most significant ones:
 
 ## 👏 Credits
 
-The dog assets were created by [NVPH Studio](https://nvph-studio.itch.io/dog-animation-4-different-dogs). All the details about the license
+- The dog assets were created by [NVPH Studio](https://nvph-studio.itch.io/dog-animation-4-different-dogs). All the details about the license
 can be found [here](https://creativecommons.org/licenses/by-nd/4.0/#).
-The old cat assets were designed by [SeethingSwarm](https://seethingswarm.itch.io/catset).
+- The old cat assets were designed by [SeethingSwarm](https://seethingswarm.itch.io/catset).
 
 <!-- panvimdoc-ignore-start -->
 ## 🙏 Acknowledgements
