@@ -1,4 +1,4 @@
-*pets.nvim.txt*          For NVIM v0.8.0         Last change: 2023 February 25
+*pets.nvim.txt*           For NVIM v0.8.0           Last change: 2023 March 01
 
 ==============================================================================
 Table of Contents                                *pets.nvim-table-of-contents*
@@ -8,9 +8,6 @@ Table of Contents                                *pets.nvim-table-of-contents*
 ==============================================================================
 1. pets.nvim                                             *pets.nvim-pets.nvim*
 
-
-  ⚠️⚠️⚠️ Currently the plugin is not working and is searching for new
-  assets. See #26
 Pets.nvim is a plugin that provides the missing core functionality of showing
 little animal friends inside your editor. It relies on the kitty graphics
 protocol <https://sw.kovidgoyal.net/kitty/graphics-protocol/> and hologram.nvim
