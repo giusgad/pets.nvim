@@ -2,11 +2,11 @@ local M = {}
 M.available_pets = {}
 
 function M.listdir(path)
-  local sol = {}
-  for val in vim.fs.dir(path) do
-    table.insert(sol, val)
-  end
-  return sol
+    local sol = {}
+    for val in vim.fs.dir(path) do
+        table.insert(sol, val)
+    end
+    return sol
 end
 
 local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"

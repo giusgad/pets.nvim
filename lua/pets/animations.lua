@@ -1,5 +1,3 @@
-local utils = require("pets.utils")
-
 local M = {}
 M.Animation = {}
 M.Animation.__index = M.Animation
@@ -8,11 +6,6 @@ M.Animation.__index = M.Animation
 local lines = {}
 
 local listdir = require("pets.utils").listdir
-local sleeping_animations = { "idle", "sit", "liedown" }
-
-local function get_sleeping_animation() -- TODO:
-    return sleeping_animations[math.random(#sleeping_animations)]
-end
 
 -- @param sourcedir the full path for the media directory
 -- @param type,style type and style of the pet
@@ -55,19 +48,14 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     end
 
     -- setup next_actions
-    instance.next_actions = {
-        idle = { "sit", "liedown", "walk", "run", "pee" },
-        liedown = { "sit", "idle" },
-        pee = { "idle", "sit" },
-        run = { "walk", "idle" },
-        sit = { "walk", "liedown", "pee" },
-        walk = { "run", "idle" },
-    }
+    local specs = require("pets.pets." .. type)
+    instance.next_actions = specs.next_actions
+    instance.sleeping_animations = specs.sleeping_animations
 
     return instance
 end
 
-function M.Animation:start_timer(interval)
+function M.Animation:start_timer()
     if self.timer ~= nil then
         self:stop_timer()
     end
@@ -97,9 +85,19 @@ function M.Animation:start()
     self.repetitions = 0
 
     if self.state.sleeping then
-        self.current_action = get_sleeping_animation()
+        self.current_action = self.sleeping_animations[math.random(#self.sleeping_animations)]
     else
-        self.current_action = self.current_action or "idle"
+        -- get available first action
+        local first_action
+        for k in pairs(self.frames) do
+            if vim.startswith(k, "idle") then
+                first_action = k
+                break
+            elseif first_action == nil then
+                first_action = k
+            end
+        end
+        self.current_action = self.current_action or first_action
     end
 
     if not self.state.paused and not self.state.hidden then
@@ -170,8 +168,8 @@ function M.Animation:set_next_action()
     end
     if self.state.sleeping then
         -- If the animation isn't currently a sleeping animtion, put the pet in it, otherwise loop the animation
-        if not vim.tbl_contains(sleeping_animations, self.current_action) then
-            self.current_action = get_sleeping_animation()
+        if not vim.tbl_contains(self.sleeping_animations, self.current_action) then
+            self.current_action = self.sleeping_animations[math.random(#self.sleeping_animations)]
         end
     else
         if math.random() < 0.5 then
