@@ -8,4 +8,10 @@ return {
         walk = { "run", "idle" },
     },
     idle_actions = { "idle", "sit", "liedown" },
+    movements = {
+        right = {
+            normal = { "walk" },
+            fast = { "run" },
+        },
+    },
 }

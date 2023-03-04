@@ -47,9 +47,10 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     end
 
     -- setup next_actions
-    local specs = require("pets.pets." .. type)
-    instance.next_actions = specs.next_actions
-    instance.idle_actions = specs.idle_actions
+    local pet = require("pets.pets." .. type)
+    instance.next_actions = pet.next_actions
+    instance.idle_actions = pet.idle_actions
+    instance.movements = pet.movements
 
     return instance
 end
@@ -180,15 +181,23 @@ end
 
 -- @function set horizontal movement per frame based on current action
 function M.Animation:set_next_col()
-    if self.current_action == "walk" then
+    if vim.tbl_contains(self.movements.right.normal, self.current_action) then
         if self.col < self.popup.win_config.width - 8 then
             self.col = self.col + 1
         else
             self.col = M.base_col
         end
-    elseif self.current_action == "run" then
+    elseif vim.tbl_contains(self.movements.right.fast, self.current_action) then
         if self.col < self.popup.win_config.width - 8 then
             self.col = self.col + 2
+        else
+            self.col = M.base_col
+        end
+    elseif vim.tbl_contains(self.movements.right.slow, self.current_action) then
+        if self.col < self.popup.win_config.width - 8 then
+            if self.frame_counter % 2 == 0 or self.repetitions % 2 == 0 then
+                self.col = self.col + 1
+            end
         else
             self.col = M.base_col
         end
