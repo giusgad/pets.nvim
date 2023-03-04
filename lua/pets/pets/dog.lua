@@ -7,5 +7,5 @@ return {
         sit = { "walk", "liedown", "pee" },
         walk = { "run", "idle" },
     },
-    sleeping_animations = { "idle", "sit", "liedown" },
+    idle_actions = { "idle", "sit", "liedown" },
 }

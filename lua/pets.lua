@@ -3,7 +3,7 @@ local utils = require("pets.utils")
 
 M.paused = false
 M.paused = false
-M.sleeping = false
+M.idle = false
 
 M.options = {
     row = 1, -- the row (height) to display the pet at
@@ -64,7 +64,7 @@ function M.create_pet(name, type, style)
     local state = {
         paused = M.paused,
         hidden = M.paused,
-        sleeping = M.sleeping,
+        idle = M.idle,
     }
     local pet = require("pets.pet").Pet.new(name, type, style, M.options, state)
     pet:animate()
@@ -117,10 +117,10 @@ function M.toggle_hide()
     end
 end
 
-function M.toggle_sleep()
-    M.sleeping = not M.sleeping
+function M.toggle_idle()
+    M.idle = not M.idle
     for _, pet in pairs(M.pets) do
-        pet:set_sleep(M.sleeping)
+        pet:set_idle(M.idle)
     end
 end
 

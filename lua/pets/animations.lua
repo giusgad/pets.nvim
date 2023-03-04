@@ -11,13 +11,12 @@ local listdir = require("pets.utils").listdir
 -- @param type,style type and style of the pet
 -- @param popup the popup where the pet is displayed
 -- @param user_opts table with user options
--- @param state table with the current plugin state (sleeping, paused, hidden)
+-- @param state table with the current plugin state (idle, paused, hidden)
 -- @return a new animation instance
 function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     local instance = setmetatable({}, M.Animation)
     instance.type = type
     instance.style = style
-    instance.sourcedir = sourcedir
     instance.frame_counter = 1
     instance.actions = listdir(sourcedir)
     instance.frames = {}
@@ -50,7 +49,7 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     -- setup next_actions
     local specs = require("pets.pets." .. type)
     instance.next_actions = specs.next_actions
-    instance.sleeping_animations = specs.sleeping_animations
+    instance.idle_actions = specs.idle_actions
 
     return instance
 end
@@ -84,8 +83,8 @@ function M.Animation:start()
     end
     self.repetitions = 0
 
-    if self.state.sleeping then
-        self.current_action = self.sleeping_animations[math.random(#self.sleeping_animations)]
+    if self.state.idle then
+        self.current_action = self.idle_actions[math.random(#self.idle_actions)]
     else
         -- get available first action
         local first_action
@@ -166,10 +165,10 @@ function M.Animation:set_next_action()
         self.current_action = "die"
         return
     end
-    if self.state.sleeping then
-        -- If the animation isn't currently a sleeping animtion, put the pet in it, otherwise loop the animation
-        if not vim.tbl_contains(self.sleeping_animations, self.current_action) then
-            self.current_action = self.sleeping_animations[math.random(#self.sleeping_animations)]
+    if self.state.idle then
+        -- If the animation isn't currently a idle animtion, put the pet in it, otherwise loop the animation
+        if not vim.tbl_contains(self.idle_actions, self.current_action) then
+            self.current_action = self.idle_actions[math.random(#self.idle_actions)]
         end
     else
         if math.random() < 0.5 then

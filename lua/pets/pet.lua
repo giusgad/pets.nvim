@@ -68,8 +68,8 @@ function M.Pet:set_hidden(hidden)
     })
 end
 
-function M.Pet:set_sleep(sleeping)
-    self.animation:set_state({ sleeping = sleeping })
+function M.Pet:set_idle(idle)
+    self.animation:set_state({ idle = idle })
 end
 
 return M
