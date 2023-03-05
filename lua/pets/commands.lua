@@ -10,8 +10,13 @@ vim.api.nvim_create_user_command("PetsNew", function(input)
     end
 
     if pets.options.random then
-        local styles = utils.available_pets["dog"]
-        pet, style = "dog", styles[math.random(#styles)]
+        local pet_types = {}
+        for k in pairs(utils.available_pets) do
+            table.insert(pet_types, k)
+        end
+        pet = pet_types[math.random(#pet_types)]
+        local styles = utils.available_pets[pet]
+        style = styles[math.random(#styles)]
     end
 
     pets.create_pet(input.args, pet, style)
