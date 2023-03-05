@@ -1,5 +1,12 @@
 local M = {}
 M.available_pets = {}
+M.default_pet_table = {
+    idle_actions = {},
+    movements = {
+        right = { slow = {}, normal = {}, fast = {} },
+        left = { slow = {}, normal = {}, fast = {} },
+    },
+}
 
 function M.listdir(path)
     local sol = {}

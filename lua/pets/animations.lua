@@ -5,7 +5,8 @@ M.Animation.__index = M.Animation
 -- lines to insert in the buffer to avoid image stretching
 local lines = {}
 
-local listdir = require("pets.utils").listdir
+local utils = require("pets.utils")
+local listdir = utils.listdir
 
 -- @param sourcedir the full path for the media directory
 -- @param type,style type and style of the pet
@@ -46,8 +47,9 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
         instance.frames[action] = current_frames
     end
 
-    -- setup next_actions
-    local pet = require("pets.pets." .. type)
+    -- setup pet-specific values
+    -- extend the table to not get errors when something is not specified (i.e. left movements)
+    local pet = vim.tbl_deep_extend("keep", require("pets.pets." .. type), utils.default_pet_table)
     instance.next_actions = pet.next_actions
     instance.idle_actions = pet.idle_actions
     instance.movements = pet.movements
@@ -107,6 +109,13 @@ function M.Animation:start()
             M.Animation.next_frame(self)
         end)
     end
+end
+
+function M.Animation:stop()
+    if self.current_image then
+        self.current_image:delete(0, { free = false })
+    end
+    self:stop_timer()
 end
 
 -- @function called on every tick from the timer, go to the next frame
@@ -202,13 +211,6 @@ function M.Animation:set_next_col()
             self.col = M.base_col
         end
     end
-end
-
-function M.Animation:stop()
-    if self.current_image then
-        self.current_image:delete(0, { free = false })
-    end
-    self:stop_timer()
 end
 
 function M.Animation:set_state(new_state)
