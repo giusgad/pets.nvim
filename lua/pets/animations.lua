@@ -29,13 +29,13 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     end
 
     -- user options
-    instance.row, instance.col = user_opts.row, user_opts.col
     instance.speed_multiplier = user_opts.speed_multiplier
     if user_opts.col > popup.win_config.width - 8 then
         M.base_col = popup.win_config.width - 8
     else
         M.base_col = user_opts.col
     end
+    instance.row, instance.col = user_opts.row, math.random(M.base_col, popup.win_config.width - 8)
 
     -- setup frames
     for _, action in pairs(instance.actions) do
