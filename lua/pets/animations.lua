@@ -53,6 +53,7 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     instance.next_actions = pet.next_actions
     instance.idle_actions = pet.idle_actions
     instance.movements = pet.movements
+    instance.first_action = pet.first_action
 
     return instance
 end
@@ -89,17 +90,7 @@ function M.Animation:start()
     if self.state.idle then
         self.current_action = self.idle_actions[math.random(#self.idle_actions)]
     else
-        -- get available first action
-        local first_action
-        for k in pairs(self.frames) do
-            if vim.startswith(k, "idle") then
-                first_action = k
-                break
-            elseif first_action == nil then
-                first_action = k
-            end
-        end
-        self.current_action = self.current_action or first_action
+        self.current_action = self.current_action or self.first_action
     end
 
     if not self.state.paused and not self.state.hidden then
@@ -132,8 +123,8 @@ function M.Animation:next_frame()
     end
     if self.frame_counter > #self.frames[self.current_action] then -- what to do when current frames end
         self.repetitions = self.repetitions + 1
-        -- if the animation lasted at least 8 frames go to the next one else repeat it (useful for 1 or 4 frames animations)
-        if self.repetitions * #self.frames[self.current_action] >= 8 then
+        -- if the animation has less than 2 frames loop it until it lasted 8 frames
+        if #self.frames[self.current_action] > 2 or self.repetitions * #self.frames[self.current_action] >= 8 then
             M.Animation.set_next_action(self)
             self.repetitions = 0
         end
@@ -164,7 +155,7 @@ function M.Animation:next_frame()
     self.frame_counter = self.frame_counter + 1
 end
 
--- @function decide which action comes after the following
+-- @function decide which action comes after the current_action
 function M.Animation:set_next_action()
     if self.dying then
         if self.current_action == "die" then
@@ -181,9 +172,11 @@ function M.Animation:set_next_action()
             self.current_action = self.idle_actions[math.random(#self.idle_actions)]
         end
     else
-        if math.random() < 0.5 then
+        if math.random() < 0.5 then -- 50% chance to keep doing the current action
             self.current_action =
                 self.next_actions[self.current_action][math.random(#self.next_actions[self.current_action])]
+        else
+            self.current_action = self.next_actions[self.current_action][1]
         end
     end
 end
@@ -204,7 +197,7 @@ function M.Animation:set_next_col()
         end
     elseif vim.tbl_contains(self.movements.right.slow, self.current_action) then
         if self.col < self.popup.win_config.width - 8 then
-            if #self.frames[self.current_action] < 2 then -- if there is only one frame in the current action
+            if #self.frames[self.current_action] <= 2 then -- if there is only one frame in the current action
                 if self.repetitions % 2 == 0 then -- then use repetitions as a counter
                     self.col = self.col + 1
                 end
