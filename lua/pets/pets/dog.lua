@@ -10,6 +10,7 @@ return {
         walk_left = { "walk_left", "run_left", "idle" },
     },
     idle_actions = { "idle", "sit", "liedown" },
+    first_action = "idle",
     movements = {
         right = {
             normal = { "walk" },
