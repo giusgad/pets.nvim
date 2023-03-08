@@ -52,7 +52,7 @@ This is the default configuration:
   default_pet = "dog", -- the pet to use for the PetNew command
   default_style = "brown", -- the style of the pet to use for the PetNew command
   random = true, -- wether to use a random pet for the PetNew command, ovverides default_pet and default_style
-  -- death_animation = true, -- animate the pet's death, set to false to feel less guilt -- currently no animations are available
+  death_animation = true, -- animate the pet's death, set to false to feel less guilt -- currently no animations are available
   popup = { -- popup options, try changing these if you see a rectangle around the pets
     width = "30%", -- can be a string with percentage like "45%" or a number of columns like 45
     winblend = 100, -- winblend value - see :h 'winblend' - only used if avoid_statusline is false
@@ -77,6 +77,9 @@ This is the default configuration:
     - black
     - gray
     - beige
+- slime:
+    - green
+    - pink (WIP)
 
 ## 📑 Usage - commands
 
@@ -102,6 +105,7 @@ and shares all of its limitations. Here are the most significant ones:
 
 - The dog assets were created by [NVPH Studio](https://nvph-studio.itch.io/dog-animation-4-different-dogs). All the details about the license
 can be found [here](https://creativecommons.org/licenses/by-nd/4.0/#).
+- The slime was created by me (for now it follows the MIT license):) 
 - The old cat assets were designed by [SeethingSwarm](https://seethingswarm.itch.io/catset).
 
 <!-- panvimdoc-ignore-start -->
