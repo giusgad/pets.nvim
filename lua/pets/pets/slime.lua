@@ -26,4 +26,11 @@ return {
             normal = { "walk_left" },
         },
     },
+    get_death_animation = function(current_action)
+        local split_animations = { "split_idle", "divide", "split_walk", "split_swap" }
+        if vim.tbl_contains(split_animations, current_action) then
+            return "split_die"
+        end
+        return "die"
+    end,
 }

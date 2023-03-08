@@ -54,6 +54,7 @@ function M.Animation.new(sourcedir, type, style, popup, user_opts, state)
     instance.idle_actions = pet.idle_actions
     instance.movements = pet.movements
     instance.first_action = pet.first_action
+    instance.get_death_animation = pet.get_death_animation
 
     return instance
 end
@@ -158,12 +159,12 @@ end
 -- @function decide which action comes after the current_action
 function M.Animation:set_next_action()
     if self.dying then
-        if self.current_action == "die" then
+        if vim.startswith(self.current_action, "die") or vim.endswith(self.current_action, "die") then
             self.dead = true
             M.Animation.stop(self)
             self.popup:unmount()
         end
-        self.current_action = "die"
+        self.current_action = self.get_death_animation(self.current_action)
         return
     end
     if self.state.idle then
