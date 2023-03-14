@@ -7,10 +7,11 @@ return {
         walk_left = { "walk_left", "run_left", "idle_blink", "idle_wobble" },
         run_left = { "run_left", "walk_left", "run", "idle_wobble", "divide" },
         --
-        divide = { "split_walk", "split_idle" },
-        split_walk = { "split_walk", "split_idle", "split_swap", "join" },
-        split_idle = { "split_idle", "split_walk", "split_swap" },
-        split_swap = { "split_walk", "split_idle", "join" },
+        divide = { "split_walk", "split_idle", "split_walk_left" },
+        split_walk = { "split_walk", "split_walk_left", "split_idle", "split_swap", "join" },
+        split_idle = { "split_idle", "split_walk", "split_walk_left", "split_swap", "join" },
+        split_swap = { "split_walk", "split_walk_left", "split_idle", "join" },
+        split_walk_left = { "split_walk_left", "split_walk", "split_idle", "split_swap", "join" },
         join = { "idle_wobble" },
     },
     idle_actions = { "idle_wobble", "idle_blink" },
@@ -24,6 +25,7 @@ return {
         left = {
             fast = { "run_left" },
             normal = { "walk_left" },
+            slow = { "split_walk_left" },
         },
     },
     get_death_animation = function(current_action)
