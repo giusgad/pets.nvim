@@ -80,9 +80,25 @@ function M.kill_pet(name)
     end
 end
 
+function M.remove_pet(name)
+    if M.pets[name] ~= nil then
+        M.pets[name]:remove()
+        M.pets[name] = nil
+    else
+        utils.warning("Couldn't find a pet named \"" .. name .. '"')
+    end
+end
+
 function M.kill_all()
     for _, pet in pairs(M.pets) do
         pet:kill()
+    end
+    M.pets = {}
+end
+
+function M.remove_all()
+    for _, pet in pairs(M.pets) do
+        pet:remove()
     end
     M.pets = {}
 end

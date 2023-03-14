@@ -55,6 +55,11 @@ function M.Pet:kill()
     end
 end
 
+function M.Pet:remove()
+    self.animation:stop()
+    self.popup:unmount()
+end
+
 function M.Pet:set_paused(paused)
     self.animation:set_state({
         paused = paused,

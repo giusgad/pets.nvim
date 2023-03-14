@@ -38,9 +38,18 @@ end, { nargs = 1, complete = utils.complete_typestyle })
 vim.api.nvim_create_user_command("PetsKillAll", function()
     pets.kill_all()
 end, {})
+vim.api.nvim_create_user_command("PetsRemoveAll", function()
+    pets.remove_all()
+end, {})
 
 vim.api.nvim_create_user_command("PetsKill", function(input)
     pets.kill_pet(input.args)
+end, {
+    nargs = 1,
+    complete = utils.complete_name,
+})
+vim.api.nvim_create_user_command("PetsRemove", function(input)
+    pets.remove_pet(input.args)
 end, {
     nargs = 1,
     complete = utils.complete_name,
