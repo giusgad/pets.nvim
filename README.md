@@ -9,6 +9,14 @@ If you like the art for the pets, check out the [Credits](#-Credits) section.
 ![pets.gif](./pets.gif)
 <!-- panvimdoc-ignore-end -->
 
+## ⚠️ Limitations
+
+This plugin relies on [hologram.nvim](https://github.com/edluffy/hologram.nvim) to display the images,
+and shares all of its limitations. Here are the most significant ones:
+- Only works with terminal emulators that support the [kitty graphics protocol](https://sw.kovidgoyal.net/kitty/graphics-protocol/)
+    To be more precise the only terminal I tested where I was able to have the protocol working correctly is kitty itself.
+- Doesn't currently work inside tmux
+
 ## 📦 Installation
 
 Install with your favorite package manager!
@@ -63,24 +71,6 @@ This is the default configuration:
 }
 ```
 
-## ❔ FAQ - if something doesn't work
-
-- If the pet is not at the height you desire change the `row` option (higher row means the pet is displayed lower on the screen)
-- If you're seeing a square around the pets, try setting `avoid_statusline` to `true`. If you're still seeing it
-    try setting `winblend` to 0 or using a custom highlight group as shown [above](#-Configuration) and in #8.
-- If you don't see the pet at all checkout the [limitations](#-Limitations) and try changing the row value.
-
-## 🐾 Available pets
-
-- dog:
-    - brown
-    - black
-    - gray
-    - beige
-- slime:
-    - green
-    - pink (WIP)
-
 ## 📑 Usage - commands
 
 These are all the available commands:
@@ -94,19 +84,38 @@ These are all the available commands:
 - `PetsHideToggle`: pause the animation for all pets and hide them / show all the pets again and resume animations
 - `PetsIdleToggle`/`PetsSleepToggle`: basically a do-not-disturb mode, pets are still animated but do not move around
 
-## ⚠️ Limitations
+## ❔ FAQ - if something doesn't work
 
-This plugin relies on [hologram.nvim](https://github.com/edluffy/hologram.nvim) to display the images,
-and shares all of its limitations. Here are the most significant ones:
-- Only works with terminal emulators that support the [kitty graphics protocol](https://sw.kovidgoyal.net/kitty/graphics-protocol/)
-    To be more precise the only terminal I tested where I was able to have the protocol working correctly is kitty itself.
-- Doesn't currently work inside tmux
+- If the pet is not at the height you desire change the `row` option (higher row means the pet is displayed lower on the screen)
+- If you're seeing a square around the pets, try setting `avoid_statusline` to `true`. If you're still seeing it
+    try setting `winblend` to 0 or using a custom highlight group as shown [above](#-Configuration) and in #8.
+- If you don't see the pet at all checkout the [limitations](#-Limitations) and try changing the row value.
+
+## 🐾 Available pets
+
+| Pet | Styles |
+|:---:|:-------:|
+|dog|brown, black, gray, beige|
+|slime|green, pink, orange, blue|
+|clippy|black, brown, green, yellow|
+|cockatiel|gray|
+|crab|red|
+|mod|purple|
+|rocky|gray|
+|rubber duck|yellow|
+|snake|green|
+|zappy|yellow|
+
+<!-- panvimdoc-ignore-start -->
+![bar.png](./bar.png)
+<!-- panvimdoc-ignore-end -->
 
 ## 👏 Credits
 
 - The dog assets were created by [NVPH Studio](https://nvph-studio.itch.io/dog-animation-4-different-dogs). All the details about the license
 can be found [here](https://creativecommons.org/licenses/by-nd/4.0/#).
 - The slime was created by me (for now it follows the MIT license):) 
+- The Clippy, Rocky, Zappy, rubber duck, snake, cockatiel, Ferris the crab, and Mod the dotnet bot assets were created by [Marc Duiker](https://twitter.com/marcduiker) for [vscode-pets](https://github.com/tonybaloney/vscode-pets) ([license](https://github.com/tonybaloney/vscode-pets/blob/master/LICENSE)).
 - The old cat assets were designed by [SeethingSwarm](https://seethingswarm.itch.io/catset).
 
 <!-- panvimdoc-ignore-start -->
