@@ -1,6 +1,12 @@
 local pets = require("pets")
 local utils = require("pets.utils")
 
+vim.api.nvim_create_autocmd({ "VimResized", "WinResized" }, {
+    callback = function()
+        pets.refresh()
+    end,
+})
+
 vim.api.nvim_create_user_command("PetsNew", function(input)
     local pet, style = pets.options.default_pet, pets.options.default_style
 

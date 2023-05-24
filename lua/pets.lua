@@ -140,4 +140,10 @@ function M.toggle_idle()
     end
 end
 
+function M.refresh()
+    for _, pet in pairs(M.pets) do
+        pet:refresh_popup()
+    end
+end
+
 return M

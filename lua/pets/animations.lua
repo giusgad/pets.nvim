@@ -184,20 +184,21 @@ end
 
 -- @function set horizontal movement per frame based on current action
 function M.Animation:set_next_col()
+    local width = self.popup.win_config.width
     if vim.tbl_contains(self.movements.right.normal, self.current_action) then
-        if self.col < self.popup.win_config.width - 8 then
+        if self.col < width - 8 then
             self.col = self.col + 1
         else
             self.col = M.base_col
         end
     elseif vim.tbl_contains(self.movements.right.fast, self.current_action) then
-        if self.col < self.popup.win_config.width - 8 then
+        if self.col < width - 8 then
             self.col = self.col + 2
         else
             self.col = M.base_col
         end
     elseif vim.tbl_contains(self.movements.right.slow, self.current_action) then
-        if self.col < self.popup.win_config.width - 8 then
+        if self.col < width - 8 then
             if #self.frames[self.current_action] <= 2 then -- if there is only one frame in the current action
                 if self.repetitions % 2 == 0 then -- then use repetitions as a counter
                     self.col = self.col + 1
@@ -214,13 +215,13 @@ function M.Animation:set_next_col()
         if self.col > M.base_col then
             self.col = self.col - 1
         else
-            self.col = self.popup.win_config.width - 8
+            self.col = width - 8
         end
     elseif vim.tbl_contains(self.movements.left.fast, self.current_action) then
         if self.col > M.base_col then
             self.col = self.col - 2
         else
-            self.col = self.popup.win_config.width - 8
+            self.col = width - 8
         end
     elseif vim.tbl_contains(self.movements.left.slow, self.current_action) then
         if self.col > M.base_col then
@@ -234,7 +235,7 @@ function M.Animation:set_next_col()
                 end
             end
         else
-            self.col = self.popup.win_config.width - 8
+            self.col = width - 8
         end
     end
 end

@@ -15,6 +15,7 @@ function M.Pet.new(name, type, style, user_opts, state)
     instance.style = style
     instance.death_animation = user_opts.death_animation
     instance.state = state
+    instance.popup_opts = user_opts.popup
 
     local wd = debug.getinfo(1).source:sub(2):match("(.*nvim/)") .. "media/"
     instance.sourcedir = wd .. type .. "/" .. style .. "/"
@@ -75,6 +76,13 @@ end
 
 function M.Pet:set_idle(idle)
     self.animation:set_state({ idle = idle })
+end
+
+function M.Pet:refresh_popup()
+    self.popup:unmount()
+    self.popup = require("nui.popup")(self.popup_opts)
+    self.popup:mount()
+    self.animation.popup = self.popup
 end
 
 return M
