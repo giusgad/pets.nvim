@@ -1,3 +1,5 @@
 vendor/plenary.nvim
 media/*.sh
 scripts/
+
+.DS_Store
