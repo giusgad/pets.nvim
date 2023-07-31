@@ -10,14 +10,16 @@ return {
     },
     idle_actions = { "idle", "idle_blink", "sit", "liedown", "sneak" },
     first_action = "idle",
-    -- movements = {
-    --     right = {
-    --         normal = { "walk" },
-    --         fast = { "run" },
-    --     },
-    --     left = {
-    --         normal = { "walk_left" },
-    --         fast = { "run_left" },
-    --     },
-    -- },
+    movements = {
+        normal = { "walk" },
+        fast = { "run" },
+        -- right = {
+        --     normal = { "walk" },
+        --     fast = { "run" },
+        -- },
+        -- left = {
+        --     normal = { "walk_left" },
+        --     fast = { "run_left" },
+        -- },
+    },
 }
