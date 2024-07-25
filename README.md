@@ -127,4 +127,7 @@ A big thanks to everyone that helped, helps or will help the project!
   <img src="https://contrib.rocks/image?repo=giusgad/pets.nvim"/>
 </a>
 
+Note that the repo was deleted and recreated in order to remove some of the old cat assets
+that were still visible in the cache of some pull requests.
+
 <!-- panvimdoc-ignore-end -->
