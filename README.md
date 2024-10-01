@@ -95,6 +95,7 @@ These are all the available commands:
 
 | Pet | Styles |
 |:---:|:-------:|
+|catgirl|blue|
 |dog|brown, black, gray, beige|
 |slime|green, pink, orange, blue|
 |clippy|black, brown, green, yellow|
